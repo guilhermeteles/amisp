@@ -310,6 +310,11 @@
     <div class="ds-header-actions">
         <span class="edit-badge">✏️ Edição ativa</span>
         <button class="ds-btn ds-btn-ghost ds-btn-edit" id="editToggle" onclick="toggleEdit()">✏️ Editar</button>
+        <button class="ds-btn ds-btn-ghost" onclick="exportJSON()" title="Salvar preenchimento como arquivo JSON">💾 Salvar</button>
+        <label class="ds-btn ds-btn-ghost" title="Carregar preenchimento de arquivo JSON" style="cursor:pointer;">
+            📂 Carregar
+            <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importJSON(event)">
+        </label>
         <button class="ds-btn ds-btn-ghost" onclick="window.print()">🖨️ Imprimir</button>
     </div>
 </header>
@@ -412,21 +417,21 @@
                         <div style="font-size:10px;font-weight:700;color:var(--ds-text-2);text-transform:uppercase;margin-bottom:4px;">Facilitador</div>
                         <span class="person">
                             <span class="person-av">WA</span>
-                            <span contenteditable="true" placeholder="Nome...">WILSON AMARAL</span>
+                            <span contenteditable="true" data-field="facilitador" placeholder="Nome...">WILSON AMARAL</span>
                         </span>
                     </div>
                     <div>
                         <div style="font-size:10px;font-weight:700;color:var(--ds-text-2);text-transform:uppercase;margin-bottom:4px;">Redator</div>
                         <span class="person">
                             <span class="person-av">HI</span>
-                            <span contenteditable="true" placeholder="Nome...">HILDEQUISON</span>
+                            <span contenteditable="true" data-field="redator" placeholder="Nome...">HILDEQUISON</span>
                         </span>
                     </div>
                     <div>
                         <div style="font-size:10px;font-weight:700;color:var(--ds-text-2);text-transform:uppercase;margin-bottom:4px;">DPO Local</div>
                         <span class="person">
                             <span class="person-av">DA</span>
-                            <span contenteditable="true" placeholder="Nome...">DAVID</span>
+                            <span contenteditable="true" data-field="dpo" placeholder="Nome...">DAVID</span>
                         </span>
                     </div>
                 </div>
@@ -435,7 +440,7 @@
                 <div class="grid g4">
                     <div>
                         <div class="role-hd">Equipe da Solução</div>
-                        <div contenteditable="true" placeholder="Adicione membros..." style="min-height:80px;">
+                        <div contenteditable="true" data-field="equipe" placeholder="Adicione membros..." style="min-height:80px;">
                             <div>David — DGGD2</div>
                             <div>Hildequison — DGGD2</div>
                             <div>Matheus — DGGD2</div>
@@ -447,7 +452,7 @@
                     </div>
                     <div>
                         <div class="role-hd">Especialistas</div>
-                        <div contenteditable="true" placeholder="Adicione especialistas..." style="min-height:80px;">
+                        <div contenteditable="true" data-field="especialistas" placeholder="Adicione especialistas..." style="min-height:80px;">
                             <div>Daniel — SUPSI Segurança</div>
                             <div>Nome — SUPSI Segurança</div>
                             <div>Daniel — SUPPD Privacidade</div>
@@ -458,14 +463,14 @@
                     </div>
                     <div>
                         <div class="role-hd">Partes Interessadas</div>
-                        <div contenteditable="true" placeholder="Adicione partes interessadas..." style="min-height:80px;">
+                        <div contenteditable="true" data-field="partes-interessadas" placeholder="Adicione partes interessadas..." style="min-height:80px;">
                             <div>Nome — Orgão/Depto Cliente / Project Owner</div>
                             <div>Nome — Depto Gerente de Departamento</div>
                         </div>
                     </div>
                     <div>
                         <div class="role-hd">Ouvinte</div>
-                        <div contenteditable="true" placeholder="Adicione ouvintes..." style="min-height:80px;"></div>
+                        <div contenteditable="true" data-field="ouvinte" placeholder="Adicione ouvintes..." style="min-height:80px;"></div>
                     </div>
                 </div>
             </div>
@@ -503,19 +508,19 @@
             <div class="ds-card">
                 <div class="ds-card-header"><div class="ds-card-title">🏢 Negócio</div></div>
                 <div class="ds-card-body">
-                    <div contenteditable="true" placeholder="Descreva o contexto de negócio da solução..." style="min-height:100px;color:var(--ds-text-2);"></div>
+                    <div contenteditable="true" data-field="negocio" placeholder="Descreva o contexto de negócio da solução..." style="min-height:100px;color:var(--ds-text-2);"></div>
                 </div>
             </div>
             <div class="ds-card">
                 <div class="ds-card-header"><div class="ds-card-title">🏗️ Arquitetura</div></div>
                 <div class="ds-card-body">
-                    <div contenteditable="true" placeholder="Descreva a arquitetura da solução..." style="min-height:100px;color:var(--ds-text-2);"></div>
+                    <div contenteditable="true" data-field="arquitetura" placeholder="Descreva a arquitetura da solução..." style="min-height:100px;color:var(--ds-text-2);"></div>
                 </div>
             </div>
             <div class="ds-card">
                 <div class="ds-card-header"><div class="ds-card-title">📝 Outros</div></div>
                 <div class="ds-card-body">
-                    <div contenteditable="true" placeholder="Outras informações relevantes..." style="min-height:100px;color:var(--ds-text-2);"></div>
+                    <div contenteditable="true" data-field="outros" placeholder="Outras informações relevantes..." style="min-height:100px;color:var(--ds-text-2);"></div>
                 </div>
             </div>
         </div>
@@ -540,13 +545,13 @@
                 <!-- Cabeçalho do sistema -->
                 <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:12px;font-size:12px;">
                     <div><strong>Sistema:</strong>
-                        <span contenteditable="true" placeholder="Nome do sistema" style="border-bottom:1px dashed var(--ds-border);padding-bottom:1px;min-width:80px;display:inline-block;margin-left:4px;">...</span>
+                        <span contenteditable="true" data-field="canvas-sistema" placeholder="Nome do sistema" style="border-bottom:1px dashed var(--ds-border);padding-bottom:1px;min-width:80px;display:inline-block;margin-left:4px;">...</span>
                     </div>
                     <div><strong>Controlador:</strong>
-                        <span contenteditable="true" placeholder="Nome do controlador" style="border-bottom:1px dashed var(--ds-border);padding-bottom:1px;min-width:80px;display:inline-block;margin-left:4px;">...</span>
+                        <span contenteditable="true" data-field="canvas-controlador" placeholder="Nome do controlador" style="border-bottom:1px dashed var(--ds-border);padding-bottom:1px;min-width:80px;display:inline-block;margin-left:4px;">...</span>
                     </div>
                     <div><strong>Operador:</strong>
-                        <span contenteditable="true" placeholder="Nome do operador" style="border-bottom:1px dashed var(--ds-border);padding-bottom:1px;min-width:80px;display:inline-block;margin-left:4px;">...</span>
+                        <span contenteditable="true" data-field="canvas-operador" placeholder="Nome do operador" style="border-bottom:1px dashed var(--ds-border);padding-bottom:1px;min-width:80px;display:inline-block;margin-left:4px;">...</span>
                     </div>
                 </div>
                 <p style="font-size:10px;color:var(--ds-text-2);margin-bottom:14px;">💡 <em>Siga a orientação numérica mas fique à vontade para preencher em outra ordem.</em></p>
@@ -558,7 +563,7 @@
                     <div style="display:flex;align-items:center;justify-content:center;background:var(--ds-primary-pastel);border-radius:6px;padding:6px;font-size:10px;font-weight:700;color:var(--ds-primary-dark);">Orientações</div>
                     <div class="canvas-cell span-5" style="grid-column:span 5;">
                         <div class="canvas-hd">⑦ TITULAR</div>
-                        <div class="canvas-body" contenteditable="true">
+                        <div class="canvas-body" contenteditable="true" data-field="canvas-titular">
                             Devemos garantir privacidade para quem?<br>
                             Quem são os titulares dos dados pessoais?<br>
                             São tratados dados de crianças, adolescentes ou outro grupo vulnerável?
@@ -573,23 +578,23 @@
                     <!-- Linha 1 dos campos -->
                     <div class="canvas-cell">
                         <div class="canvas-hd">① DADOS PESSOAIS</div>
-                        <div class="canvas-body" contenteditable="true">Tratamos dados pessoais? Quais dados pessoais devemos proteger? (Ex.: nome, cpf, endereço)</div>
+                        <div class="canvas-body" contenteditable="true" data-field="canvas-dados">Tratamos dados pessoais? Quais dados pessoais devemos proteger? (Ex.: nome, cpf, endereço)</div>
                     </div>
                     <div class="canvas-cell">
                         <div class="canvas-hd">② SENSÍVEIS</div>
-                        <div class="canvas-body" contenteditable="true">Tratamos dados pessoais sensíveis? Que tipos? (saúde, etnia etc.)</div>
+                        <div class="canvas-body" contenteditable="true" data-field="canvas-sensiveis">Tratamos dados pessoais sensíveis? Que tipos? (saúde, etnia etc.)</div>
                     </div>
                     <div class="canvas-cell">
                         <div class="canvas-hd">③ FINALIDADE</div>
-                        <div class="canvas-body" contenteditable="true">Qual o objetivo de cada tratamento? Por que coletamos esses dados?</div>
+                        <div class="canvas-body" contenteditable="true" data-field="canvas-finalidade">Qual o objetivo de cada tratamento? Por que coletamos esses dados?</div>
                     </div>
                     <div class="canvas-cell">
                         <div class="canvas-hd">④ BASE LEGAL</div>
-                        <div class="canvas-body" contenteditable="true">Qual a fundamentação legal para o tratamento dos dados pessoais?</div>
+                        <div class="canvas-body" contenteditable="true" data-field="canvas-base-legal">Qual a fundamentação legal para o tratamento dos dados pessoais?</div>
                     </div>
                     <div class="canvas-cell" style="grid-row:span 2;">
                         <div class="canvas-hd">⑨ DIREITOS</div>
-                        <div class="canvas-body" contenteditable="true">
+                        <div class="canvas-body" contenteditable="true" data-field="canvas-direitos">
                             Como o titular pode acessar os dados dele?<br>
                             O titular pode corrigir seus dados? Como?<br>
                             O titular pode pedir anonimização ou exclusão? Como?<br>
@@ -601,19 +606,19 @@
                     <!-- Linha 2 dos campos -->
                     <div class="canvas-cell">
                         <div class="canvas-hd">⑤ TRATAMENTO</div>
-                        <div class="canvas-body" contenteditable="true">Como os dados são coletados, retidos, usados e eliminados? Por quanto tempo? Volume e frequência? Os dados são tratados no Brasil?</div>
+                        <div class="canvas-body" contenteditable="true" data-field="canvas-tratamento">Como os dados são coletados, retidos, usados e eliminados? Por quanto tempo? Volume e frequência? Os dados são tratados no Brasil?</div>
                     </div>
                     <div class="canvas-cell">
                         <div class="canvas-hd">⑥ TRANSFERÊNCIA</div>
-                        <div class="canvas-body" contenteditable="true">Com quais órgãos, entidades ou empresas os dados serão compartilhados?</div>
+                        <div class="canvas-body" contenteditable="true" data-field="canvas-transferencia">Com quais órgãos, entidades ou empresas os dados serão compartilhados?</div>
                     </div>
                     <div class="canvas-cell">
                         <div class="canvas-hd">⑧ CANAIS</div>
-                        <div class="canvas-body" contenteditable="true">Como o titular poderá entrar em contato? Por quais canais nos comunicamos com o titular? Como comunicamos os direitos?</div>
+                        <div class="canvas-body" contenteditable="true" data-field="canvas-canais">Como o titular poderá entrar em contato? Por quais canais nos comunicamos com o titular? Como comunicamos os direitos?</div>
                     </div>
                     <div class="canvas-cell">
                         <div class="canvas-hd">⑩ MEDIDAS TÉC. E ADM.</div>
-                        <div class="canvas-body" contenteditable="true">Quais medidas técnicas de segurança serão adotadas? Quais medidas administrativas? O time está capacitado?</div>
+                        <div class="canvas-body" contenteditable="true" data-field="canvas-medidas">Quais medidas técnicas de segurança serão adotadas? Quais medidas administrativas? O time está capacitado?</div>
                     </div>
                 </div>
             </div>
@@ -893,7 +898,7 @@
         <div class="ds-card" style="margin-bottom:14px;">
             <div class="ds-card-header"><div class="ds-card-title">🚀 Quais são nossos próximos passos?</div></div>
             <div class="ds-card-body">
-                <div contenteditable="true" placeholder="Registre os próximos passos do time após o AMISP..." style="min-height:80px;color:var(--ds-text-2);"></div>
+                <div contenteditable="true" data-field="proximos-passos" placeholder="Registre os próximos passos do time após o AMISP..." style="min-height:80px;color:var(--ds-text-2);"></div>
             </div>
         </div>
 
@@ -905,17 +910,17 @@
                     <div class="retro retro-bom">
                         <div class="retro-title">👍 Que bom!</div>
                         <p style="font-size:11px;color:var(--ds-text-2);margin-bottom:10px;">Se você gostou do evento, aprendeu com ele ou achou a colaboração interessante, deixe aqui seu feedback positivo.</p>
-                        <div contenteditable="true" placeholder="Escreva aqui..." style="min-height:70px;font-size:12px;"></div>
+                        <div contenteditable="true" data-field="retro-bom" placeholder="Escreva aqui..." style="min-height:70px;font-size:12px;"></div>
                     </div>
                     <div class="retro retro-pena">
                         <div class="retro-title">👎 Que pena!</div>
                         <p style="font-size:11px;color:var(--ds-text-2);margin-bottom:10px;">Se você observou pontos que devem ser melhorados ou que não foram legais, informe aqui para que possamos melhorar.</p>
-                        <div contenteditable="true" placeholder="Escreva aqui..." style="min-height:70px;font-size:12px;"></div>
+                        <div contenteditable="true" data-field="retro-pena" placeholder="Escreva aqui..." style="min-height:70px;font-size:12px;"></div>
                     </div>
                     <div class="retro retro-tal">
                         <div class="retro-title">💡 Que tal?</div>
                         <p style="font-size:11px;color:var(--ds-text-2);margin-bottom:10px;">Se você tem sugestões que podem melhorar ainda mais o nosso evento, deixe-a aqui!</p>
-                        <div contenteditable="true" placeholder="Escreva aqui..." style="min-height:70px;font-size:12px;"></div>
+                        <div contenteditable="true" data-field="retro-tal" placeholder="Escreva aqui..." style="min-height:70px;font-size:12px;"></div>
                     </div>
                 </div>
             </div>
@@ -957,6 +962,132 @@
             });
         });
     });
+
+    /* ================================================================
+       EXPORT / IMPORT JSON
+    ================================================================ */
+
+    /* Coleta todos os campos editáveis com data-field */
+    function collectFields() {
+        const fields = {};
+        document.querySelectorAll('[data-field]').forEach(el => {
+            fields[el.dataset.field] = el.innerHTML;
+        });
+        return fields;
+    }
+
+    /* Coleta as linhas da tabela de ações */
+    function collectActions() {
+        const rows = [];
+        document.querySelectorAll('#actionBody tr').forEach(tr => {
+            const cells = tr.querySelectorAll('td');
+            if (cells.length === 3) {
+                rows.push({
+                    risco:        cells[0].innerHTML,
+                    acao:         cells[1].innerHTML,
+                    responsavel:  cells[2].innerHTML
+                });
+            }
+        });
+        return rows;
+    }
+
+    /* Coleta o valor selecionado no Likert */
+    function collectLikert() {
+        const sel = document.querySelector('#likert1 .l-btn.sel');
+        return sel ? sel.textContent.trim() : null;
+    }
+
+    /* ── Exportar ──────────────────────────────────────────── */
+    function exportJSON() {
+        const data = {
+            _versao: '1.0',
+            _exportado: new Date().toISOString(),
+            campos: collectFields(),
+            acoes: collectActions(),
+            likert: collectLikert()
+        };
+        const json = JSON.stringify(data, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement('a');
+        const ts   = new Date().toISOString().slice(0,10);
+        a.href     = url;
+        a.download = `amisp_${ts}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('💾 Arquivo JSON salvo!', 'success');
+    }
+
+    /* ── Importar ──────────────────────────────────────────── */
+    function importJSON(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const data = JSON.parse(e.target.result);
+
+                /* Restaura campos simples */
+                if (data.campos) {
+                    Object.entries(data.campos).forEach(([key, val]) => {
+                        const el = document.querySelector(`[data-field="${key}"]`);
+                        if (el) el.innerHTML = val;
+                    });
+                }
+
+                /* Restaura tabela de ações */
+                if (data.acoes && Array.isArray(data.acoes)) {
+                    const tbody = document.getElementById('actionBody');
+                    tbody.innerHTML = '';
+                    data.acoes.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td contenteditable="true" placeholder="Risco...">${row.risco || ''}</td>
+                            <td contenteditable="true" placeholder="Ação...">${row.acao || ''}</td>
+                            <td contenteditable="true" placeholder="Responsável...">${row.responsavel || ''}</td>`;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+                /* Restaura Likert */
+                if (data.likert) {
+                    document.querySelectorAll('#likert1 .l-btn').forEach(btn => {
+                        btn.classList.toggle('sel', btn.textContent.trim() === String(data.likert));
+                    });
+                }
+
+                showToast('📂 Preenchimento carregado!', 'success');
+            } catch (err) {
+                showToast('❌ Arquivo inválido ou corrompido.', 'error');
+            }
+            /* Limpa o input para permitir reimportar o mesmo arquivo */
+            event.target.value = '';
+        };
+        reader.readAsText(file);
+    }
+
+    /* ── Toast de feedback ─────────────────────────────────── */
+    function showToast(msg, type) {
+        let toast = document.getElementById('ds-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'ds-toast';
+            toast.style.cssText = `
+                position:fixed; bottom:24px; right:24px; z-index:9999;
+                padding:10px 18px; border-radius:8px; font-size:13px;
+                font-family:'Raleway',sans-serif; font-weight:700;
+                box-shadow:0 4px 12px rgba(0,0,0,0.2);
+                transition:opacity .3s; pointer-events:none;`;
+            document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.style.background = type === 'error' ? '#e52207' : '#168821';
+        toast.style.color = '#fff';
+        toast.style.opacity = '1';
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 2800);
+    }
 </script>
 </body>
 </html>
