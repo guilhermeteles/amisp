@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMISP — Análise Multidisciplinar Inicial de Segurança e Privacidade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ================================================================
+           DS GOV — Design System do Governo Federal Brasileiro
+        ================================================================ */
+        :root {
+            --ds-primary:        #1351b4;
+            --ds-primary-dark:   #0c3f8f;
+            --ds-primary-light:  #c5d4eb;
+            --ds-primary-pastel: #dbe8fb;
+            --ds-success:        #168821;
+            --ds-success-light:  #e8f5e9;
+            --ds-warning:        #a26727;
+            --ds-warning-light:  #fff3e0;
+            --ds-danger:         #e52207;
+            --ds-danger-light:   #fdecea;
+            --ds-info-light:     #e8f0fb;
+            --ds-surface:        #f8f8f8;
+            --ds-bg:             #ffffff;
+            --ds-border:         #cccccc;
+            --ds-border-light:   #ededed;
+            --ds-text:           #333333;
+            --ds-text-2:         #636262;
+            --ds-white:          #ffffff;
+            --ds-font:           'Raleway', system-ui, -apple-system, sans-serif;
+            --ds-shadow:         0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+            --ds-shadow-md:      0 3px 8px rgba(0,0,0,0.15);
+            --r:                 8px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--ds-font);
+            font-size: 13px;
+            color: var(--ds-text);
+            background: var(--ds-surface);
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--ds-primary); }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 4px; }
+
+        /* ── Header ──────────────────────────────────────────────────── */
+        .ds-header {
+            background: var(--ds-primary);
+            color: var(--ds-white);
+            padding: 8px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+            position: sticky;
+            top: 0;
+            z-index: 200;
+        }
+        .ds-header-brand { display: flex; align-items: center; gap: 16px; }
+        .ds-header-sep { width: 1px; height: 32px; background: rgba(255,255,255,0.35); }
+        .ds-header-title { font-size: 15px; font-weight: 700; }
+        .ds-header-sub   { font-size: 11px; opacity: .8; }
+        .ds-header-logo  { font-size: 13px; font-weight: 800; letter-spacing: .04em; }
+        .ds-header-actions { display: flex; gap: 8px; align-items: center; }
+
+        /* ── Buttons ─────────────────────────────────────────────────── */
+        .ds-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: var(--r);
+            font-family: var(--ds-font); font-size: 12px; font-weight: 700;
+            cursor: pointer; border: 2px solid transparent; transition: all .18s;
+            line-height: 1; text-decoration: none;
+        }
+        .ds-btn-ghost {
+            background: rgba(255,255,255,.15); color: var(--ds-white);
+            border-color: rgba(255,255,255,.4);
+        }
+        .ds-btn-ghost:hover { background: rgba(255,255,255,.28); }
+        .ds-btn-secondary {
+            background: transparent; color: var(--ds-primary);
+            border-color: var(--ds-primary);
+        }
+        .ds-btn-secondary:hover { background: var(--ds-primary-pastel); }
+
+        /* ── Tags ────────────────────────────────────────────────────── */
+        .ds-tag {
+            display: inline-flex; align-items: center;
+            padding: 2px 10px; border-radius: 99px;
+            font-size: 11px; font-weight: 700; letter-spacing: .03em;
+        }
+        .ds-tag-info    { background: var(--ds-info-light);    color: #155bcb; }
+        .ds-tag-primary { background: var(--ds-primary);       color: var(--ds-white); }
+        .ds-tag-success { background: var(--ds-success-light); color: var(--ds-success); }
+        .ds-tag-warning { background: var(--ds-warning-light); color: var(--ds-warning); }
+        .ds-tag-danger  { background: var(--ds-danger-light);  color: var(--ds-danger); }
+
+        /* ── Cards ───────────────────────────────────────────────────── */
+        .ds-card {
+            background: var(--ds-bg);
+            border-radius: var(--r);
+            box-shadow: var(--ds-shadow);
+            display: flex; flex-direction: column;
+            overflow: hidden; height: 100%;
+        }
+        .ds-card-header {
+            padding: 10px 14px;
+            border-bottom: 3px solid var(--ds-primary);
+            background: linear-gradient(135deg, var(--ds-primary-pastel) 0%, var(--ds-bg) 100%);
+        }
+        .ds-card-title { font-size: 12px; font-weight: 700; color: var(--ds-primary-dark); line-height: 1.3; }
+        .ds-card-body  { padding: 12px 14px; flex: 1; font-size: 12px; line-height: 1.6; }
+
+        .ds-card-green  .ds-card-header { border-color: var(--ds-success); background: linear-gradient(135deg,var(--ds-success-light),var(--ds-bg)); }
+        .ds-card-yellow .ds-card-header { border-color: var(--ds-warning); background: linear-gradient(135deg,var(--ds-warning-light),var(--ds-bg)); }
+        .ds-card-red    .ds-card-header { border-color: var(--ds-danger);  background: linear-gradient(135deg,var(--ds-danger-light),var(--ds-bg)); }
+
+        /* ── Hero ────────────────────────────────────────────────────── */
+        .ds-hero {
+            background: var(--ds-primary-dark);
+            color: var(--ds-white);
+            padding: 28px 32px;
+        }
+        .ds-hero h1 { font-size: 28px; font-weight: 800; line-height: 1.1; }
+        .ds-hero p  { font-size: 13px; opacity: .85; margin-top: 4px; }
+
+        /* ── Sections ────────────────────────────────────────────────── */
+        .ds-main    { max-width: 1440px; margin: 0 auto; padding: 28px 32px; }
+        .ds-section { margin-bottom: 48px; }
+
+        .ds-section-hd {
+            display: flex; align-items: center; gap: 14px;
+            margin-bottom: 18px; padding-bottom: 12px;
+            border-bottom: 2px solid var(--ds-primary-light);
+        }
+        .ds-section-num {
+            width: 34px; height: 34px; min-width: 34px; border-radius: 50%;
+            background: var(--ds-primary); color: var(--ds-white);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; font-weight: 800;
+        }
+        .ds-section-hd h2 { font-size: 20px; font-weight: 700; color: var(--ds-primary-dark); }
+        .ds-section-hd p  { font-size: 12px; color: var(--ds-text-2); margin-top: 2px; }
+
+        /* ── Grid ────────────────────────────────────────────────────── */
+        .grid    { display: grid; gap: 14px; }
+        .g2      { grid-template-columns: repeat(2,1fr); }
+        .g3      { grid-template-columns: repeat(3,1fr); }
+        .g4      { grid-template-columns: repeat(4,1fr); }
+        .span2   { grid-column: span 2; }
+        .span3   { grid-column: span 3; }
+        .span4   { grid-column: span 4; }
+        .rspan2  { grid-row: span 2; }
+
+        /* ── Tables ──────────────────────────────────────────────────── */
+        table { border-collapse: collapse; width: 100%; font-size: 11px; }
+        th, td { border: 1px solid var(--ds-border); padding: 6px 10px; text-align: left; vertical-align: top; }
+        thead th { background: var(--ds-primary); color: var(--ds-white); font-weight: 600; }
+        tr:nth-child(even) td { background: #f9f9f9; }
+
+        /* ── Accordions ──────────────────────────────────────────────── */
+        .acc { border: 1px solid var(--ds-border-light); border-radius: var(--r); overflow: hidden; margin-bottom: 8px; }
+        .acc-hd {
+            background: var(--ds-primary-pastel); padding: 9px 14px;
+            cursor: pointer; font-weight: 700; color: var(--ds-primary-dark); font-size: 12px;
+            display: flex; justify-content: space-between; align-items: center; user-select: none;
+        }
+        .acc-hd:hover { background: var(--ds-primary-light); }
+        .acc-body { padding: 14px; background: var(--ds-bg); font-size: 12px; line-height: 1.6; display: none; }
+        .acc.open .acc-body  { display: block; }
+        .acc-arrow { transition: transform .2s; display: inline-block; }
+        .acc.open .acc-arrow { transform: rotate(180deg); }
+
+        /* ── Persons ─────────────────────────────────────────────────── */
+        .person {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 3px 10px 3px 4px; border-radius: 99px;
+            background: var(--ds-primary-pastel); border: 1px solid var(--ds-primary-light);
+            font-size: 11px; font-weight: 600; color: var(--ds-primary-dark); margin: 2px;
+        }
+        .person-av {
+            width: 22px; height: 22px; border-radius: 50%;
+            background: var(--ds-primary); color: var(--ds-white);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px; font-weight: 800;
+        }
+
+        /* ── Role column headers ─────────────────────────────────────── */
+        .role-hd {
+            font-size: 10px; font-weight: 800; color: var(--ds-primary-dark);
+            text-transform: uppercase; letter-spacing: .04em;
+            margin-bottom: 8px; padding-bottom: 4px;
+            border-bottom: 2px solid var(--ds-primary);
+        }
+
+        /* ── Canvas LGPD ─────────────────────────────────────────────── */
+        .canvas-cell {
+            background: var(--ds-bg); border: 1px solid var(--ds-border);
+            border-radius: 6px; padding: 8px;
+        }
+        .canvas-hd {
+            font-size: 10px; font-weight: 800; color: var(--ds-primary-dark);
+            text-transform: uppercase; margin-bottom: 6px; padding-bottom: 4px;
+            border-bottom: 2px solid var(--ds-primary);
+        }
+        .canvas-body { font-size: 11px; color: var(--ds-text-2); line-height: 1.5; }
+
+        /* ── Risk matrix ─────────────────────────────────────────────── */
+        .risk-table th { background: var(--ds-primary-pastel); color: var(--ds-primary-dark); font-size: 10px; text-align: center; }
+        .risk-low    { background: #8bc34a; color: white; font-weight: 700; text-align: center; border-radius: 4px; }
+        .risk-med    { background: #ffb300; color: #333;  font-weight: 700; text-align: center; border-radius: 4px; }
+        .risk-high   { background: #e52207; color: white; font-weight: 700; text-align: center; border-radius: 4px; }
+
+        /* ── Likert ──────────────────────────────────────────────────── */
+        .likert { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .l-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .l-btn {
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 2px solid var(--ds-primary); background: var(--ds-bg);
+            color: var(--ds-primary); font-weight: 700; font-size: 13px;
+            cursor: pointer; transition: all .18s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .l-btn:hover, .l-btn.sel { background: var(--ds-primary); color: white; }
+        .l-lbl { font-size: 9px; color: var(--ds-text-2); text-align: center; max-width: 36px; }
+
+        /* ── Retro columns ───────────────────────────────────────────── */
+        .retro { padding: 14px; border-radius: var(--r); border-top: 4px solid; }
+        .retro-bom  { background: var(--ds-success-light); border-color: var(--ds-success); }
+        .retro-pena { background: var(--ds-danger-light);  border-color: var(--ds-danger); }
+        .retro-tal  { background: var(--ds-warning-light); border-color: var(--ds-warning); }
+        .retro-title { font-size: 15px; font-weight: 800; margin-bottom: 6px; }
+        .retro-bom  .retro-title { color: var(--ds-success); }
+        .retro-pena .retro-title { color: var(--ds-danger); }
+        .retro-tal  .retro-title { color: var(--ds-warning); }
+
+        /* ── Editable mode ───────────────────────────────────────────── */
+        .edit-badge {
+            display: none; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: 99px;
+            background: rgba(22,136,33,.25); color: var(--ds-white);
+            font-size: 11px; font-weight: 700; border: 1px solid rgba(22,136,33,.5);
+        }
+        body.editing .edit-badge { display: inline-flex; }
+        body.editing .ds-btn-edit { background: rgba(22,136,33,.25); border-color: rgba(22,136,33,.6); }
+
+        body.editing [contenteditable="true"] {
+            outline: 2px dashed var(--ds-primary);
+            border-radius: 4px;
+            background: rgba(19,81,180,.03);
+            min-height: 20px;
+            cursor: text;
+            padding: 2px 4px;
+        }
+        body.editing [contenteditable="true"]:focus {
+            outline: 2px solid var(--ds-primary);
+            background: rgba(19,81,180,.06);
+        }
+        [contenteditable="true"]:empty::before {
+            content: attr(placeholder);
+            color: var(--ds-text-2);
+            font-style: italic;
+            opacity: .6;
+        }
+
+        /* ── Footer ──────────────────────────────────────────────────── */
+        footer {
+            background: var(--ds-primary-dark); color: rgba(255,255,255,.75);
+            text-align: center; padding: 20px; font-size: 11px;
+            margin-top: 32px;
+        }
+        footer p + p { margin-top: 4px; opacity: .6; }
+
+        /* ── Responsive ──────────────────────────────────────────────── */
+        @media (max-width: 900px) {
+            .g4 { grid-template-columns: repeat(2,1fr); }
+            .g3 { grid-template-columns: repeat(2,1fr); }
+        }
+        @media (max-width: 600px) {
+            .g2,.g3,.g4 { grid-template-columns: 1fr; }
+            .span2,.span3,.span4,.rspan2 { grid-column: auto; grid-row: auto; }
+            .ds-main { padding: 16px; }
+        }
+        @media print {
+            .ds-header-actions, .ds-btn, .acc-hd::after { display: none !important; }
+            .ds-header { position: static; }
+            .acc-body { display: block !important; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ================================================================
+     HEADER
+================================================================ -->
+<header class="ds-header">
+    <div class="ds-header-brand">
+        <div class="ds-header-logo">GOV.BR&nbsp;|&nbsp;SERPRO</div>
+        <div class="ds-header-sep"></div>
+        <div>
+            <div class="ds-header-title">AMISP</div>
+            <div class="ds-header-sub">Análise Multidisciplinar Inicial de Segurança e Privacidade</div>
+        </div>
+    </div>
+    <div class="ds-header-actions">
+        <span class="edit-badge">✏️ Edição ativa</span>
+        <button class="ds-btn ds-btn-ghost ds-btn-edit" id="editToggle" onclick="toggleEdit()">✏️ Editar</button>
+        <button class="ds-btn ds-btn-ghost" onclick="window.print()">🖨️ Imprimir</button>
+    </div>
+</header>
+
+<!-- Hero -->
+<div class="ds-hero">
+    <h1>AMISP</h1>
+    <p>Análise Multidisciplinar Inicial de Segurança e Privacidade — Facilitação de evento</p>
+</div>
+
+<main class="ds-main">
+
+    <!-- ================================================================
+         SEÇÃO 1 — Apresentação
+    ================================================================ -->
+    <section class="ds-section" id="s1">
+        <div class="ds-section-hd">
+            <div class="ds-section-num">1</div>
+            <div>
+                <h2>Vamos aprender um pouco sobre o AMISP?</h2>
+                <p>Introdução ao evento, papeis e participantes</p>
+            </div>
+            <span class="ds-tag ds-tag-info" style="margin-left:auto;">⏱ 15 min</span>
+        </div>
+
+        <div class="grid g3" style="margin-bottom:14px;">
+            <!-- O que é o AMISP -->
+            <div class="ds-card">
+                <div class="ds-card-header"><div class="ds-card-title">O que é o AMISP e qual a sua importância?</div></div>
+                <div class="ds-card-body">
+                    A Análise Multidisciplinar Inicial de Segurança e Privacidade (AMISP) é um evento que ocorre o mais cedo possível dentro do ciclo de vida de uma solução digital. Seu objetivo é levantar e mapear precocemente as questões pertinentes à segurança da solução bem como os aspectos de privacidade e proteção de dados pessoais por ela tratados.
+                </div>
+            </div>
+
+            <!-- Em que situação -->
+            <div class="ds-card">
+                <div class="ds-card-header"><div class="ds-card-title">Em que situação faço um AMISP?</div></div>
+                <div class="ds-card-body">
+                    <ul>
+                        <li>Sistema novo na fase de 'prospecção' ou etapa inicial de definição.</li>
+                        <li>Sistema já existente que tenha grande mudança de requisitos com possíveis impactos de segurança e/ou privacidade.</li>
+                        <li>Sistema legado cuja análise multidisciplinar de segurança e/ou privacidade seja demandada ou notoriamente necessária.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Papeis — span 2 linhas -->
+            <div class="ds-card rspan2">
+                <div class="ds-card-header"><div class="ds-card-title">Quais são os principais papeis envolvidos?</div></div>
+                <div class="ds-card-body">
+                    <ol>
+                        <li><strong>Facilitador</strong> — Pessoa com experiência em facilitação de eventos como <a href="http://unifica.serpro/v211/praticas/design-thinking" target="_blank">Design Thinking</a> e <a href="http://unifica.serpro/v211/praticas/inception" target="_blank">Lean Inception</a>.</li>
+                        <li><strong>Redator (Autor)</strong> — Responsável por elaborar o documento ou ata com o registro do evento.</li>
+                        <li><strong>Equipe da Solução</strong> — Desenvolvedores e demais membros técnicos comprometidos com a solução.</li>
+                        <li><strong>Especialistas</strong> — Profissionais com conhecimento especializado em segurança, legislação, privacidade, infraestrutura etc.</li>
+                        <li><strong>Partes Interessadas</strong> — Demais profissionais envolvidos que podem colaborar na tomada de decisões.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Resultados esperados -->
+            <div class="ds-card ds-card-green">
+                <div class="ds-card-header"><div class="ds-card-title">O que é esperado como resultado?</div></div>
+                <div class="ds-card-body">
+                    <ol>
+                        <li>Documento ou ata com os elementos preliminares do <a href="https://lgpd.gitpages.serpro/conteudo/desenvolvimento-confiavel/modelo-de-confianca/" target="_blank">modelo de confiança</a>.</li>
+                        <li>Conhecimento inicial sobre segurança e privacidade internalizado na equipe.</li>
+                        <li>Complementação da sensibilização da equipe relativa a 'Segurança &amp; Privacidade'.</li>
+                        <li>Em caso de sistema legado, elaboração de um <a href="https://lgpd.gitpages.serpro/conteudo/desenvolvimento-confiavel/wiki/dev/ral/" target="_blank">RAL</a>.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Nível de conhecimento -->
+            <div class="ds-card ds-card-yellow">
+                <div class="ds-card-header"><div class="ds-card-title">Nível de Conhecimento sobre LGPD / GDC</div></div>
+                <div class="ds-card-body">
+                    <p style="margin-bottom:8px;">Vamos entender como a Equipe da Solução avalia seu conhecimento em LGPD e no GDC.</p>
+                    <p style="font-size:10px;color:var(--ds-text-2);margin-bottom:8px;">Selecione seu nível (1 = Iniciante → 5 = Especialista)</p>
+                    <div class="likert" id="likert1">
+                        <div class="l-item"><button class="l-btn">1</button><span class="l-lbl">Iniciante</span></div>
+                        <div class="l-item"><button class="l-btn">2</button></div>
+                        <div class="l-item"><button class="l-btn">3</button><span class="l-lbl">Médio</span></div>
+                        <div class="l-item"><button class="l-btn">4</button></div>
+                        <div class="l-item"><button class="l-btn">5</button><span class="l-lbl">Especialista</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Participantes -->
+        <div class="ds-card">
+            <div class="ds-card-header"><div class="ds-card-title">Quais são as pessoas que representam os papeis do AMISP no nosso sistema?</div></div>
+            <div class="ds-card-body">
+                <p style="margin-bottom:12px;">Agora que já entendemos os papeis, vamos nomeá-los?</p>
+
+                <!-- Funções-chave -->
+                <div style="display:flex;flex-wrap:wrap;gap:16px;margin-bottom:16px;">
+                    <div>
+                        <div style="font-size:10px;font-weight:700;color:var(--ds-text-2);text-transform:uppercase;margin-bottom:4px;">Facilitador</div>
+                        <span class="person">
+                            <span class="person-av">WA</span>
+                            <span contenteditable="true" placeholder="Nome...">WILSON AMARAL</span>
+                        </span>
+                    </div>
+                    <div>
+                        <div style="font-size:10px;font-weight:700;color:var(--ds-text-2);text-transform:uppercase;margin-bottom:4px;">Redator</div>
+                        <span class="person">
+                            <span class="person-av">HI</span>
+                            <span contenteditable="true" placeholder="Nome...">HILDEQUISON</span>
+                        </span>
+                    </div>
+                    <div>
+                        <div style="font-size:10px;font-weight:700;color:var(--ds-text-2);text-transform:uppercase;margin-bottom:4px;">DPO Local</div>
+                        <span class="person">
+                            <span class="person-av">DA</span>
+                            <span contenteditable="true" placeholder="Nome...">DAVID</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Grupos -->
+                <div class="grid g4">
+                    <div>
+                        <div class="role-hd">Equipe da Solução</div>
+                        <div contenteditable="true" placeholder="Adicione membros..." style="min-height:80px;">
+                            <div>David — DGGD2</div>
+                            <div>Hildequison — DGGD2</div>
+                            <div>Matheus — DGGD2</div>
+                            <div>Lucas — DGGD2</div>
+                            <div>Erique — DGGD2</div>
+                            <div>Fábio Maximiano — DGGD2</div>
+                            <div>Thiago Piculo — Gestor Biovalid</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="role-hd">Especialistas</div>
+                        <div contenteditable="true" placeholder="Adicione especialistas..." style="min-height:80px;">
+                            <div>Daniel — SUPSI Segurança</div>
+                            <div>Nome — SUPSI Segurança</div>
+                            <div>Daniel — SUPPD Privacidade</div>
+                            <div>Nome — SUPPD Privacidade</div>
+                            <div>Nome — SEDAT Arquitetura</div>
+                            <div>Nome — SEDAT Arquitetura</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="role-hd">Partes Interessadas</div>
+                        <div contenteditable="true" placeholder="Adicione partes interessadas..." style="min-height:80px;">
+                            <div>Nome — Orgão/Depto Cliente / Project Owner</div>
+                            <div>Nome — Depto Gerente de Departamento</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="role-hd">Ouvinte</div>
+                        <div contenteditable="true" placeholder="Adicione ouvintes..." style="min-height:80px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================
+         SEÇÃO 2 — Solução
+    ================================================================ -->
+    <section class="ds-section" id="s2">
+        <div class="ds-section-hd">
+            <div class="ds-section-num">2</div>
+            <div>
+                <h2>Vamos saber mais sobre a solução?</h2>
+                <p>Apresentação do sistema com foco em segurança e privacidade</p>
+            </div>
+            <span class="ds-tag ds-tag-info" style="margin-left:auto;">⏱ 10 min</span>
+        </div>
+
+        <div class="ds-card" style="margin-bottom:14px;">
+            <div class="ds-card-header"><div class="ds-card-title">Vamos saber mais sobre o negócio e a arquitetura?</div></div>
+            <div class="ds-card-body">
+                <p style="margin-bottom:10px;">Neste momento é a hora de apresentar o sistema, levando em consideração os aspectos de segurança, privacidade e proteção de dados:</p>
+                <ol style="margin-bottom:10px;">
+                    <li>Quem são os usuários?</li>
+                    <li>Por onde os dados trafegam?</li>
+                    <li>Há integração com outros sistemas?</li>
+                    <li>Quais as restrições e premissas?</li>
+                </ol>
+                <p style="font-size:11px;color:var(--ds-text-2);">Enquanto isso, os participantes vão levantando questionamentos ou fazendo anotações relevantes sob o ponto de vista de segurança e privacidade.</p>
+            </div>
+        </div>
+
+        <div class="grid g3">
+            <div class="ds-card">
+                <div class="ds-card-header"><div class="ds-card-title">🏢 Negócio</div></div>
+                <div class="ds-card-body">
+                    <div contenteditable="true" placeholder="Descreva o contexto de negócio da solução..." style="min-height:100px;color:var(--ds-text-2);"></div>
+                </div>
+            </div>
+            <div class="ds-card">
+                <div class="ds-card-header"><div class="ds-card-title">🏗️ Arquitetura</div></div>
+                <div class="ds-card-body">
+                    <div contenteditable="true" placeholder="Descreva a arquitetura da solução..." style="min-height:100px;color:var(--ds-text-2);"></div>
+                </div>
+            </div>
+            <div class="ds-card">
+                <div class="ds-card-header"><div class="ds-card-title">📝 Outros</div></div>
+                <div class="ds-card-body">
+                    <div contenteditable="true" placeholder="Outras informações relevantes..." style="min-height:100px;color:var(--ds-text-2);"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================
+         SEÇÃO 3 — Canvas LGPD
+    ================================================================ -->
+    <section class="ds-section" id="s3">
+        <div class="ds-section-hd">
+            <div class="ds-section-num">3</div>
+            <div>
+                <h2>Vamos entender o sistema sob o ponto de vista da privacidade de dados?</h2>
+                <p>Canvas LGPD — mapeamento de dados pessoais e tratamento</p>
+            </div>
+        </div>
+
+        <!-- Canvas LGPD -->
+        <div class="ds-card" style="margin-bottom:20px;">
+            <div class="ds-card-header"><div class="ds-card-title">Canvas LGPD</div></div>
+            <div class="ds-card-body">
+                <!-- Cabeçalho do sistema -->
+                <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:12px;font-size:12px;">
+                    <div><strong>Sistema:</strong>
+                        <span contenteditable="true" placeholder="Nome do sistema" style="border-bottom:1px dashed var(--ds-border);padding-bottom:1px;min-width:80px;display:inline-block;margin-left:4px;">...</span>
+                    </div>
+                    <div><strong>Controlador:</strong>
+                        <span contenteditable="true" placeholder="Nome do controlador" style="border-bottom:1px dashed var(--ds-border);padding-bottom:1px;min-width:80px;display:inline-block;margin-left:4px;">...</span>
+                    </div>
+                    <div><strong>Operador:</strong>
+                        <span contenteditable="true" placeholder="Nome do operador" style="border-bottom:1px dashed var(--ds-border);padding-bottom:1px;min-width:80px;display:inline-block;margin-left:4px;">...</span>
+                    </div>
+                </div>
+                <p style="font-size:10px;color:var(--ds-text-2);margin-bottom:14px;">💡 <em>Siga a orientação numérica mas fique à vontade para preencher em outra ordem.</em></p>
+
+                <!-- Grade do canvas -->
+                <div style="display:grid;grid-template-columns:90px repeat(5,1fr);gap:8px;">
+
+                    <!-- Linha 0: vazio + TITULAR span 5 -->
+                    <div style="display:flex;align-items:center;justify-content:center;background:var(--ds-primary-pastel);border-radius:6px;padding:6px;font-size:10px;font-weight:700;color:var(--ds-primary-dark);">Orientações</div>
+                    <div class="canvas-cell span-5" style="grid-column:span 5;">
+                        <div class="canvas-hd">⑦ TITULAR</div>
+                        <div class="canvas-body" contenteditable="true">
+                            Devemos garantir privacidade para quem?<br>
+                            Quem são os titulares dos dados pessoais?<br>
+                            São tratados dados de crianças, adolescentes ou outro grupo vulnerável?
+                        </div>
+                    </div>
+
+                    <!-- Coluna de orientações (span 3 linhas) -->
+                    <div style="grid-row:span 2;background:var(--ds-primary-pastel);border-radius:6px;padding:8px;font-size:10px;color:var(--ds-text-2);">
+                        Ative o modo <strong>Editar</strong> (botão no topo) para preencher os campos do canvas.
+                    </div>
+
+                    <!-- Linha 1 dos campos -->
+                    <div class="canvas-cell">
+                        <div class="canvas-hd">① DADOS PESSOAIS</div>
+                        <div class="canvas-body" contenteditable="true">Tratamos dados pessoais? Quais dados pessoais devemos proteger? (Ex.: nome, cpf, endereço)</div>
+                    </div>
+                    <div class="canvas-cell">
+                        <div class="canvas-hd">② SENSÍVEIS</div>
+                        <div class="canvas-body" contenteditable="true">Tratamos dados pessoais sensíveis? Que tipos? (saúde, etnia etc.)</div>
+                    </div>
+                    <div class="canvas-cell">
+                        <div class="canvas-hd">③ FINALIDADE</div>
+                        <div class="canvas-body" contenteditable="true">Qual o objetivo de cada tratamento? Por que coletamos esses dados?</div>
+                    </div>
+                    <div class="canvas-cell">
+                        <div class="canvas-hd">④ BASE LEGAL</div>
+                        <div class="canvas-body" contenteditable="true">Qual a fundamentação legal para o tratamento dos dados pessoais?</div>
+                    </div>
+                    <div class="canvas-cell" style="grid-row:span 2;">
+                        <div class="canvas-hd">⑨ DIREITOS</div>
+                        <div class="canvas-body" contenteditable="true">
+                            Como o titular pode acessar os dados dele?<br>
+                            O titular pode corrigir seus dados? Como?<br>
+                            O titular pode pedir anonimização ou exclusão? Como?<br>
+                            Portabilidade dos dados? Como?<br>
+                            Como revogar consentimento?
+                        </div>
+                    </div>
+
+                    <!-- Linha 2 dos campos -->
+                    <div class="canvas-cell">
+                        <div class="canvas-hd">⑤ TRATAMENTO</div>
+                        <div class="canvas-body" contenteditable="true">Como os dados são coletados, retidos, usados e eliminados? Por quanto tempo? Volume e frequência? Os dados são tratados no Brasil?</div>
+                    </div>
+                    <div class="canvas-cell">
+                        <div class="canvas-hd">⑥ TRANSFERÊNCIA</div>
+                        <div class="canvas-body" contenteditable="true">Com quais órgãos, entidades ou empresas os dados serão compartilhados?</div>
+                    </div>
+                    <div class="canvas-cell">
+                        <div class="canvas-hd">⑧ CANAIS</div>
+                        <div class="canvas-body" contenteditable="true">Como o titular poderá entrar em contato? Por quais canais nos comunicamos com o titular? Como comunicamos os direitos?</div>
+                    </div>
+                    <div class="canvas-cell">
+                        <div class="canvas-hd">⑩ MEDIDAS TÉC. E ADM.</div>
+                        <div class="canvas-body" contenteditable="true">Quais medidas técnicas de segurança serão adotadas? Quais medidas administrativas? O time está capacitado?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Material de apoio -->
+        <h3 style="font-size:14px;font-weight:700;color:var(--ds-primary-dark);margin-bottom:10px;">📚 Conceitos e Exemplos de Apoio</h3>
+
+        <div class="acc open">
+            <div class="acc-hd" onclick="this.parentElement.classList.toggle('open')">Controlador e Operador <span class="acc-arrow">▼</span></div>
+            <div class="acc-body">
+                <div class="grid g2">
+                    <div><strong>Controlador</strong> — Pessoa natural ou jurídica, de direito público ou privado, a quem competem as decisões referentes ao tratamento de dados pessoais, tais como as finalidades e os meios do tratamento (art. 5°, VI, LGPD).</div>
+                    <div><strong>Operador</strong> — Pessoa natural ou jurídica, de direito público ou privado, que realiza o tratamento de dados pessoais em nome do controlador (art. 5°, VII, LGPD).</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="acc">
+            <div class="acc-hd" onclick="this.parentElement.classList.toggle('open')">Dados Pessoais e Dados Sensíveis <span class="acc-arrow">▼</span></div>
+            <div class="acc-body">
+                <div class="grid g2">
+                    <div>
+                        <strong>Dados Pessoais</strong> — Qualquer informação que permita identificar, direta ou indiretamente, um indivíduo vivo.<br><br>
+                        <em>Exemplos:</em> Nome, Telefone, Endereço, CPF, Email, Data de Nascimento, Endereço IP, Matrícula.
+                    </div>
+                    <div>
+                        <strong>Dados Sensíveis</strong> — Dados que revelam origem racial ou étnica, convicções religiosas, opiniões políticas, filiação sindical, questões genéticas, biométricas, de saúde ou vida sexual.<br><br>
+                        <em>Exemplos:</em> Foto, Religião, Partido Político, Reconhecimento Facial, Digital, Dado de saúde.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="acc">
+            <div class="acc-hd" onclick="this.parentElement.classList.toggle('open')">Operações de Tratamento <span class="acc-arrow">▼</span></div>
+            <div class="acc-body">
+                <p style="margin-bottom:8px;">Tratamento: <em>toda operação realizada com dados pessoais.</em></p>
+                <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">
+                    <span class="ds-tag ds-tag-info">Acesso</span><span class="ds-tag ds-tag-info">Armazenamento</span>
+                    <span class="ds-tag ds-tag-info">Arquivamento</span><span class="ds-tag ds-tag-info">Avaliação</span>
+                    <span class="ds-tag ds-tag-info">Classificação</span><span class="ds-tag ds-tag-info">Coleta</span>
+                    <span class="ds-tag ds-tag-info">Comunicação</span><span class="ds-tag ds-tag-info">Controle</span>
+                    <span class="ds-tag ds-tag-info">Difusão</span><span class="ds-tag ds-tag-info">Distribuição</span>
+                    <span class="ds-tag ds-tag-info">Eliminação</span><span class="ds-tag ds-tag-info">Extração</span>
+                    <span class="ds-tag ds-tag-info">Modificação</span><span class="ds-tag ds-tag-info">Processamento</span>
+                    <span class="ds-tag ds-tag-info">Produção</span><span class="ds-tag ds-tag-info">Recepção</span>
+                    <span class="ds-tag ds-tag-info">Reprodução</span><span class="ds-tag ds-tag-info">Transferência</span>
+                    <span class="ds-tag ds-tag-info">Transmissão</span><span class="ds-tag ds-tag-info">Utilização</span>
+                </div>
+                <a href="https://www.gov.br/governodigital/pt-br/governanca-de-dados/GuiaLGPD.pdf" target="_blank">Fonte: Guia LGPD</a>
+            </div>
+        </div>
+
+        <div class="acc">
+            <div class="acc-hd" onclick="this.parentElement.classList.toggle('open')">Bases Legais para Tratamento de Dados <span class="acc-arrow">▼</span></div>
+            <div class="acc-body">
+                <div class="grid g2">
+                    <div><strong>Consentimento</strong> — Autorização expressa do titular para o tratamento de seus dados pessoais.</div>
+                    <div><strong>Obrigação Legal</strong> — Existe lei ou regulamento que determina ou autoriza o tratamento.</div>
+                    <div><strong>Administração Pública</strong> — Execução de políticas públicas previstas em leis, contratos ou convênios.</div>
+                    <div><strong>Execução de Contrato</strong> — Tratamento necessário para cumprimento de contrato com o titular.</div>
+                    <div><strong>Legítimo Interesse</strong> — Vontade do controlador em se beneficiar legalmente do tratamento, respeitando os direitos do titular.</div>
+                    <div><strong>Proteção da Vida</strong> — Tratamento indispensável para proteger a vida ou segurança física do titular.</div>
+                    <div><strong>Tutela da Saúde</strong> — Tratamento por profissionais de saúde ou autoridades sanitárias.</div>
+                    <div><strong>Proteção do Crédito</strong> — Para análise de crédito e redução de riscos de transação.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="acc">
+            <div class="acc-hd" onclick="this.parentElement.classList.toggle('open')">Direitos do Titular dos Dados <span class="acc-arrow">▼</span></div>
+            <div class="acc-body">
+                <div class="grid g2">
+                    <ul>
+                        <li>Confirmação da existência de tratamento</li>
+                        <li>Acesso aos dados pessoais</li>
+                        <li>Correção de dados incompletos ou inexatos</li>
+                        <li>Eliminação de dados desnecessários ou tratados ilegalmente</li>
+                        <li>Portabilidade dos dados</li>
+                        <li>Informação sobre compartilhamento dos dados</li>
+                    </ul>
+                    <ul>
+                        <li>Informação sobre o não consentimento e suas consequências</li>
+                        <li>Revogação do consentimento</li>
+                        <li>Reclamação junto à ANPD</li>
+                        <li>Oposição ao tratamento considerado irregular</li>
+                        <li>Revisão de decisão automatizada</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="acc">
+            <div class="acc-hd" onclick="this.parentElement.classList.toggle('open')">Informações Sigilosas <span class="acc-arrow">▼</span></div>
+            <div class="acc-body">
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>Tipo de Sigilo</th><th>Fundamento Legal</th></tr></thead>
+                        <tbody>
+                            <tr><td>Sigilo Fiscal</td><td>Lei nº 5.172, Art. 198 / LAI, Art. 22</td></tr>
+                            <tr><td>Sigilo Bancário</td><td>Lei 105/01, Art. 1o / LAI, Art. 22</td></tr>
+                            <tr><td>Sigilo Investigatório</td><td>Lei 9.784, Art. 2º e 48 / LAI, Art. 22</td></tr>
+                            <tr><td>Segredo de Justiça</td><td>CPC Lei 5.869 + CPP DL 3.689</td></tr>
+                            <tr><td>Sigilo Médico</td><td>RES. CFM Nº 999/80, Art. 102</td></tr>
+                            <tr><td>Sigilo Cliente Serpro</td><td>Lei do SERPRO, Art. 8º</td></tr>
+                            <tr><td>Sigilo Dados Pessoais Sensíveis</td><td>Lei 13.709/2018</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================
+         SEÇÃO 4 — Riscos
+    ================================================================ -->
+    <section class="ds-section" id="s4">
+        <div class="ds-section-hd">
+            <div class="ds-section-num">4</div>
+            <div>
+                <h2>Chegou a hora de analisar os riscos de segurança e privacidade</h2>
+                <p>Identificação, classificação e registro de riscos</p>
+            </div>
+        </div>
+
+        <div class="grid g3" style="margin-bottom:14px;">
+            <!-- Matriz -->
+            <div class="ds-card">
+                <div class="ds-card-header"><div class="ds-card-title">Matriz de Risco</div></div>
+                <div class="ds-card-body">
+                    <p style="font-size:10px;color:var(--ds-text-2);text-align:center;margin-bottom:8px;">Probabilidade × Impacto</p>
+                    <table class="risk-table" style="border-collapse:separate;border-spacing:3px;">
+                        <thead>
+                            <tr>
+                                <th style="background:transparent;border:none;font-size:9px;"></th>
+                                <th style="border:none;">Insignificante</th>
+                                <th style="border:none;">Moderado</th>
+                                <th style="border:none;">Catastrófico</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border:none;font-size:9px;font-weight:700;color:var(--ds-text-2);">Alta</td>
+                                <td class="risk-med" style="border:none;padding:8px 4px;">Média</td>
+                                <td class="risk-high" style="border:none;padding:8px 4px;">Alta</td>
+                                <td class="risk-high" style="border:none;padding:8px 4px;">Alta</td>
+                            </tr>
+                            <tr>
+                                <td style="border:none;font-size:9px;font-weight:700;color:var(--ds-text-2);">Média</td>
+                                <td class="risk-low" style="border:none;padding:8px 4px;">Baixa</td>
+                                <td class="risk-med" style="border:none;padding:8px 4px;">Média</td>
+                                <td class="risk-high" style="border:none;padding:8px 4px;">Alta</td>
+                            </tr>
+                            <tr>
+                                <td style="border:none;font-size:9px;font-weight:700;color:var(--ds-text-2);">Baixa</td>
+                                <td class="risk-low" style="border:none;padding:8px 4px;">Baixa</td>
+                                <td class="risk-low" style="border:none;padding:8px 4px;">Baixa</td>
+                                <td class="risk-med" style="border:none;padding:8px 4px;">Média</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Riscos de Privacidade -->
+            <div class="ds-card ds-card-yellow">
+                <div class="ds-card-header"><div class="ds-card-title">🔒 Riscos de Privacidade</div></div>
+                <div class="ds-card-body">
+                    <ul>
+                        <li>Informação insuficiente sobre a finalidade do tratamento</li>
+                        <li>Compartilhar dados pessoais com terceiros sem amparo legal</li>
+                        <li>Dados pessoais em excesso (Princípio da Necessidade)</li>
+                        <li>Retenção prolongada de dados pessoais sem justificativa</li>
+                        <li>Tratamento sem consentimento do titular</li>
+                        <li>Falha em considerar os direitos do titular</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Riscos de Proteção de Dados -->
+            <div class="ds-card ds-card-red">
+                <div class="ds-card-header"><div class="ds-card-title">🛡️ Riscos de Proteção de Dados</div></div>
+                <div class="ds-card-body">
+                    <ul>
+                        <li>Acesso não autorizado</li>
+                        <li>Modificação não autorizada</li>
+                        <li>Remoção/deleção não autorizada</li>
+                        <li>Perda de dados</li>
+                        <li>Roubo de dados</li>
+                        <li>Indisponibilidade de dados</li>
+                        <li>Reidentificação de dados pseudonimizados</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de riscos -->
+        <div class="acc open">
+            <div class="acc-hd" onclick="this.parentElement.classList.toggle('open')">📋 Exemplos de Riscos, Causas e Ações Mitigadoras <span class="acc-arrow">▼</span></div>
+            <div class="acc-body" style="overflow-x:auto;">
+                <table>
+                    <thead><tr><th>RISCO</th><th>CAUSA</th><th>AÇÃO</th></tr></thead>
+                    <tbody>
+                        <tr><td rowspan="5">Acesso não autorizado</td><td>Usuário com excesso de privilégios</td><td>Conceder privilégios mínimos necessários para a execução de suas funções</td></tr>
+                        <tr><td>Falha no procedimento de revogação de acessos</td><td>Revogar acessos de servidores inativos e usuários substituídos</td></tr>
+                        <tr><td>Sistema de controle de acesso inadequado</td><td>Melhorias ou substituição do sistema de controle de acesso</td></tr>
+                        <tr><td>Cópia de dados de produção para outros ambientes sem anonimização</td><td>Anonimizar dados sigilosos ao copiar para outros ambientes</td></tr>
+                        <tr><td>Acesso a dados sigilosos registrados em logs de produção</td><td>Anonimizar ou pseudonimizar dados sigilosos nos logs técnicos</td></tr>
+                        <tr><td rowspan="2">Modificação não autorizada</td><td>Idem Acesso não autorizado</td><td>Idem Acesso não autorizado</td></tr>
+                        <tr><td>Falhas ao executar apurações especiais</td><td>Implementar verificação por pares e testes em ambientes não produtivos</td></tr>
+                        <tr><td>Remoção/deleção não autorizada</td><td>Idem Acesso não autorizado</td><td>Idem Acesso não autorizado</td></tr>
+                        <tr><td rowspan="3">Perda de dados</td><td>Base de dados instável no Estaleiro</td><td>Avaliar migrar base de dados para o ambiente tradicional da CD</td></tr>
+                        <tr><td>Perda parcial ou total da base de dados</td><td>Avaliar eventuais/potenciais motivos e elencar ações adequadas</td></tr>
+                        <tr><td>Ransomware</td><td>Avaliar eventuais/potenciais motivos e elencar ações adequadas</td></tr>
+                        <tr><td>Roubo de dados</td><td>Falha no sistema de segurança</td><td>Avaliar uso de criptografia de dados sigilosos para mitigar riscos</td></tr>
+                        <tr><td rowspan="3">Indisponibilidade de dados</td><td>Indisponibilidade do banco de dados</td><td>Avaliar/melhorar monitoramento do servidor de banco de dados</td></tr>
+                        <tr><td>Indisponibilidade do servidor de aplicação</td><td>Avaliar/melhorar monitoramento do servidor de aplicação</td></tr>
+                        <tr><td>Falha de integração com solução de terceiros</td><td>Avaliar/melhorar monitoramento da integração</td></tr>
+                        <tr><td>Informação insuficiente sobre a finalidade do tratamento</td><td>Controlador não definiu claramente a finalidade do tratamento</td><td>Buscar junto ao Controlador a definição da finalidade do tratamento</td></tr>
+                        <tr><td rowspan="2">Dados pessoais em excesso (Princípio da Necessidade)</td><td>Finalidade ou base legal insuficiente</td><td>Definir finalidade/base legal e reavaliar necessidade de tratamento</td></tr>
+                        <tr><td>Dados pessoais em excesso, sem propósito claro</td><td>Reavaliar a necessidade de tratamento, considerando a finalidade</td></tr>
+                        <tr><td>Retenção prolongada de dados pessoais</td><td>Controlador não definiu claramente os prazos de retenção</td><td>Buscar junto ao Controlador a definição dos prazos de retenção</td></tr>
+                        <tr><td>Compartilhar dados com terceiros sem amparo legal</td><td>Compartilhamento com finalidade ou base legal insuficiente</td><td>Definir junto ao Controlador a finalidade e base legal do compartilhamento</td></tr>
+                        <tr><td rowspan="2">Falha em considerar os direitos do titular</td><td>Finalidade ou base legal insuficiente</td><td>Definir finalidade/base legal e reavaliar os direitos do titular</td></tr>
+                        <tr><td>Equipe não consegue atender o direito do titular de forma tempestiva (15 dias)</td><td>Avaliar como atender o direito de forma tempestiva (ex.: automatização)</td></tr>
+                        <tr><td>Reidentificação de dados pseudonimizados</td><td>Pseudonimização ou anonimização fraca</td><td>Buscar nova técnica de pseudonimização eficiente</td></tr>
+                        <tr><td rowspan="2">Tratamento sem consentimento do titular</td><td>Controlador não está ciente de que a base legal é Consentimento</td><td>Sensibilizar o Controlador e buscar definição sobre como pedir/revogar consentimento</td></tr>
+                        <tr><td>Não existe pedido ou revogação de consentimento</td><td>Buscar definição, junto ao Controlador, sobre como pedir/revogar consentimento</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================
+         SEÇÃO 5 — Ações e Retrospectiva
+    ================================================================ -->
+    <section class="ds-section" id="s5">
+        <div class="ds-section-hd">
+            <div class="ds-section-num">5</div>
+            <div>
+                <h2>Vamos definir ações, medidas técnicas e administrativas?</h2>
+                <p>Registro de ações, próximos passos e retrospectiva do evento</p>
+            </div>
+        </div>
+
+        <!-- Tabela de ações -->
+        <div class="ds-card" style="margin-bottom:14px;">
+            <div class="ds-card-header"><div class="ds-card-title">📋 Ações Definidas</div></div>
+            <div class="ds-card-body">
+                <table>
+                    <thead><tr><th>RISCO</th><th>AÇÃO</th><th>RESPONSÁVEL</th></tr></thead>
+                    <tbody id="actionBody">
+                        <tr>
+                            <td contenteditable="true" placeholder="Risco..."> </td>
+                            <td contenteditable="true" placeholder="Ação..."> </td>
+                            <td contenteditable="true" placeholder="Responsável..."> </td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true" placeholder="Risco..."> </td>
+                            <td contenteditable="true" placeholder="Ação..."> </td>
+                            <td contenteditable="true" placeholder="Responsável..."> </td>
+                        </tr>
+                        <tr>
+                            <td contenteditable="true" placeholder="Risco..."> </td>
+                            <td contenteditable="true" placeholder="Ação..."> </td>
+                            <td contenteditable="true" placeholder="Responsável..."> </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="ds-btn ds-btn-secondary" style="margin-top:10px;font-size:11px;" onclick="addRow()">+ Adicionar linha</button>
+            </div>
+        </div>
+
+        <!-- Próximos Passos -->
+        <div class="ds-card" style="margin-bottom:14px;">
+            <div class="ds-card-header"><div class="ds-card-title">🚀 Quais são nossos próximos passos?</div></div>
+            <div class="ds-card-body">
+                <div contenteditable="true" placeholder="Registre os próximos passos do time após o AMISP..." style="min-height:80px;color:var(--ds-text-2);"></div>
+            </div>
+        </div>
+
+        <!-- Retrospectiva -->
+        <div class="ds-card">
+            <div class="ds-card-header"><div class="ds-card-title">🔄 Vamos refletir sobre o evento de hoje?</div></div>
+            <div class="ds-card-body">
+                <div class="grid g3">
+                    <div class="retro retro-bom">
+                        <div class="retro-title">👍 Que bom!</div>
+                        <p style="font-size:11px;color:var(--ds-text-2);margin-bottom:10px;">Se você gostou do evento, aprendeu com ele ou achou a colaboração interessante, deixe aqui seu feedback positivo.</p>
+                        <div contenteditable="true" placeholder="Escreva aqui..." style="min-height:70px;font-size:12px;"></div>
+                    </div>
+                    <div class="retro retro-pena">
+                        <div class="retro-title">👎 Que pena!</div>
+                        <p style="font-size:11px;color:var(--ds-text-2);margin-bottom:10px;">Se você observou pontos que devem ser melhorados ou que não foram legais, informe aqui para que possamos melhorar.</p>
+                        <div contenteditable="true" placeholder="Escreva aqui..." style="min-height:70px;font-size:12px;"></div>
+                    </div>
+                    <div class="retro retro-tal">
+                        <div class="retro-title">💡 Que tal?</div>
+                        <p style="font-size:11px;color:var(--ds-text-2);margin-bottom:10px;">Se você tem sugestões que podem melhorar ainda mais o nosso evento, deixe-a aqui!</p>
+                        <div contenteditable="true" placeholder="Escreva aqui..." style="min-height:70px;font-size:12px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <p>SERPRO — Serviço Federal de Processamento de Dados</p>
+    <p>AMISP — Análise Multidisciplinar Inicial de Segurança e Privacidade</p>
+</footer>
+
+<script>
+    /* ── Edição ───────────────────────────────────────────── */
+    function toggleEdit() {
+        const editing = document.body.classList.toggle('editing');
+        const btn = document.getElementById('editToggle');
+        btn.textContent = editing ? '✅ Finalizar Edição' : '✏️ Editar';
+    }
+
+    /* ── Adicionar linha na tabela de ações ──────────────── */
+    function addRow() {
+        const tbody = document.getElementById('actionBody');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td contenteditable="true" placeholder="Risco..."> </td>
+            <td contenteditable="true" placeholder="Ação..."> </td>
+            <td contenteditable="true" placeholder="Responsável..."> </td>`;
+        tbody.appendChild(tr);
+    }
+
+    /* ── Likert — seleção exclusiva por grupo ────────────── */
+    document.querySelectorAll('.likert').forEach(group => {
+        group.querySelectorAll('.l-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                group.querySelectorAll('.l-btn').forEach(b => b.classList.remove('sel'));
+                btn.classList.add('sel');
+            });
+        });
+    });
+</script>
+</body>
+</html>
