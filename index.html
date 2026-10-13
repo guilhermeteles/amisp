@@ -1333,7 +1333,7 @@
     function collectFields() {
         const fields = {};
         document.querySelectorAll('[data-field]').forEach(el => {
-            fields[el.dataset.field] = el.innerHTML;
+            fields[el.dataset.field] = semComentarios(el.innerHTML);
         });
         return fields;
     }
@@ -1345,9 +1345,9 @@
             const cells = tr.querySelectorAll('td[contenteditable]');
             if (cells.length === 3) {
                 rows.push({
-                    risco:        cells[0].innerHTML,
-                    acao:         cells[1].innerHTML,
-                    responsavel:  cells[2].innerHTML
+                    risco:        semComentarios(cells[0].innerHTML),
+                    acao:         semComentarios(cells[1].innerHTML),
+                    responsavel:  semComentarios(cells[2].innerHTML)
                 });
             }
         });
@@ -1398,7 +1398,7 @@
                 if (data.campos) {
                     Object.entries(data.campos).forEach(([key, val]) => {
                         const el = document.querySelector(`[data-field="${key}"]`);
-                        if (el) el.innerHTML = val;
+                        if (el) el.innerHTML = semComentarios(val);
                     });
                 }
 
@@ -1407,7 +1407,7 @@
                     const tbody = document.getElementById('actionBody');
                     tbody.innerHTML = '';
                     data.acoes.forEach(row => {
-                        tbody.appendChild(makeActionRow(row.risco || ' ', row.acao || ' ', row.responsavel || ' '));
+                        tbody.appendChild(makeActionRow(semComentarios(row.risco) || ' ', semComentarios(row.acao) || ' ', semComentarios(row.responsavel) || ' '));
                     });
                 }
 
@@ -1503,7 +1503,10 @@
        (Word, sites etc.), mantendo apenas estrutura básica e imagens.
     ================================================================ */
     const ALLOWED_TAGS = new Set(['B','STRONG','I','EM','U','UL','OL','LI','BR','P','DIV','A','IMG']);
+    /* Remove comentários HTML (ex.: <!--StartFragment--> do Word/navegador) */
+    const semComentarios = html => String(html ?? '').replace(/<!--[\s\S]*?-->/g, '');
     function sanitizeNode(node) {
+        [...node.childNodes].forEach(n => { if (n.nodeType === Node.COMMENT_NODE) n.remove(); });
         [...node.children].forEach(child => {
             sanitizeNode(child);
             if (!ALLOWED_TAGS.has(child.tagName)) {
@@ -1570,13 +1573,13 @@
         if (data.campos) {
             Object.entries(data.campos).forEach(([key, val]) => {
                 const el = document.querySelector(`[data-field="${key}"]`);
-                if (el) el.innerHTML = val;
+                if (el) el.innerHTML = semComentarios(val);
             });
         }
         if (data.acoes && Array.isArray(data.acoes) && data.acoes.length) {
             const tbody = document.getElementById('actionBody');
             tbody.innerHTML = '';
-            data.acoes.forEach(row => tbody.appendChild(makeActionRow(row.risco || ' ', row.acao || ' ', row.responsavel || ' ')));
+            data.acoes.forEach(row => tbody.appendChild(makeActionRow(semComentarios(row.risco) || ' ', semComentarios(row.acao) || ' ', semComentarios(row.responsavel) || ' ')));
         }
         if (data.likert) {
             document.querySelectorAll('#likert1 .l-btn').forEach(btn =>
