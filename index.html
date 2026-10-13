@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMISP — Análise Multidisciplinar Inicial de Segurança e Privacidade</title>
+    <title>AMISPE — Análise Multidisciplinar Inicial de Segurança, Privacidade e Ética</title>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* ================================================================
@@ -339,6 +339,50 @@
         }
         #img-lightbox .lb-close:hover { background: rgba(255,255,255,.3); }
 
+        /* ── Seletor AMISP / AMISPE ──────────────────────────────────── */
+        .modo-sel {
+            display: inline-flex; margin-top: 14px; padding: 3px; gap: 3px;
+            background: rgba(255,255,255,.12); border-radius: 99px;
+            border: 1px solid rgba(255,255,255,.25);
+        }
+        .modo-sel button {
+            border: none; cursor: pointer; border-radius: 99px;
+            padding: 7px 16px; font-family: var(--ds-font); font-size: 12px; font-weight: 700;
+            background: transparent; color: rgba(255,255,255,.85); transition: all .18s;
+        }
+        .modo-sel button:hover { background: rgba(255,255,255,.15); }
+        .modo-sel button.sel { background: var(--ds-white); color: var(--ds-primary-dark); }
+        .modo-sel button small { font-weight: 500; opacity: .75; margin-left: 4px; }
+        body.modo-amisp .so-amispe { display: none !important; }
+        body:not(.modo-amisp) .so-amisp { display: none !important; }
+
+        /* ── Canvas Ética ────────────────────────────────────────────── */
+        .etica-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+        .etica-col  { border: 1px solid var(--etc); border-radius: 6px; overflow: hidden; background: var(--ds-bg); display: flex; flex-direction: column; }
+        .etica-hd   {
+            background: var(--etc); color: #fff; text-align: center;
+            padding: 10px 8px; font-size: 13px; font-weight: 800; line-height: 1.25;
+            min-height: 56px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .etica-hd .ico { font-size: 20px; line-height: 1; margin-bottom: 4px; }
+        .etica-col .canvas-body { padding: 10px; flex: 1; min-height: 160px; }
+        .etc-valores  { --etc: #4a7fd6; --etc-light: #e4edfb; }
+        .etc-transp   { --etc: #1f9d55; --etc-light: #e3f4ea; }
+        .etc-sust     { --etc: #7b5cc4; --etc-light: #eee8fa; }
+        .etc-equidade { --etc: #e07a1f; --etc-light: #fdeedd; }
+        .etica-apoio-col { border-radius: 6px; padding: 10px; background: var(--etc-light); border-top: 4px solid var(--etc); }
+        .etica-apoio-col h4 { font-size: 12px; font-weight: 800; color: var(--etc); margin-bottom: 6px; }
+        .etica-apoio-col p  { font-size: 11px; margin-bottom: 8px; }
+        .etica-chip {
+            display: block; background: var(--ds-bg); border-left: 3px solid var(--etc);
+            border-radius: 4px; padding: 4px 8px; margin-bottom: 4px;
+            font-size: 11px; font-weight: 600; color: var(--ds-text);
+        }
+        .etica-def dt { font-weight: 700; color: var(--ds-primary-dark); margin-top: 10px; }
+        .etica-def dt:first-child { margin-top: 0; }
+        .etica-def dd { margin: 2px 0 0; }
+        .etica-def dd em { display: block; margin-top: 2px; color: var(--ds-primary); font-style: normal; font-weight: 600; }
+
         /* ── Footer ──────────────────────────────────────────────────── */
         footer {
             background: var(--ds-primary-dark); color: rgba(255,255,255,.75);
@@ -349,16 +393,16 @@
 
         /* ── Responsive ──────────────────────────────────────────────── */
         @media (max-width: 900px) {
-            .g4 { grid-template-columns: repeat(2,1fr); }
+            .g4, .etica-grid { grid-template-columns: repeat(2,1fr); }
             .g3 { grid-template-columns: repeat(2,1fr); }
         }
         @media (max-width: 600px) {
-            .g2,.g3,.g4 { grid-template-columns: 1fr; }
+            .g2,.g3,.g4,.etica-grid { grid-template-columns: 1fr; }
             .span2,.span3,.span4,.rspan2 { grid-column: auto; grid-row: auto; }
             .ds-main { padding: 16px; }
         }
         @media print {
-            .ds-header-actions, .ds-btn, .acc-hd::after, #wysiwyg-bar, .row-del-cell { display: none !important; }
+            .ds-header-actions, .ds-btn, .acc-hd::after, #wysiwyg-bar, .row-del-cell, .modo-sel { display: none !important; }
             .ds-header { position: static; }
             .acc-body { display: block !important; }
         }
@@ -376,8 +420,8 @@
         <div class="ds-header-org">SERPRO</div>
         <div class="ds-header-sep"></div>
         <div>
-            <div class="ds-header-title">AMISP</div>
-            <div class="ds-header-sub">Análise Multidisciplinar Inicial de Segurança e Privacidade</div>
+            <div class="ds-header-title" data-t="sigla">AMISPE</div>
+            <div class="ds-header-sub" data-t="nome">Análise Multidisciplinar Inicial de Segurança, Privacidade e Ética</div>
         </div>
     </div>
     <div class="ds-header-actions">
@@ -394,8 +438,12 @@
 
 <!-- Hero -->
 <div class="ds-hero">
-    <h1>AMISP</h1>
-    <p>Análise Multidisciplinar Inicial de Segurança e Privacidade — Facilitação de evento</p>
+    <h1 data-t="sigla">AMISPE</h1>
+    <p><span data-t="nome">Análise Multidisciplinar Inicial de Segurança, Privacidade e Ética</span> — Facilitação de evento</p>
+    <div class="modo-sel" role="group" aria-label="Versão do evento">
+        <button type="button" data-modo="amisp" onclick="setModo('amisp')">AMISP <small>Segurança e Privacidade</small></button>
+        <button type="button" data-modo="amispe" onclick="setModo('amispe')" class="sel">AMISPE <small>+ Ética</small></button>
+    </div>
 </div>
 
 <main class="ds-main">
@@ -407,29 +455,30 @@
         <div class="ds-section-hd">
             <div class="ds-section-num">1</div>
             <div>
-                <h2>Vamos aprender um pouco sobre o AMISP?</h2>
+                <h2>Vamos aprender um pouco sobre o <span data-t="sigla">AMISPE</span>?</h2>
                 <p>Introdução ao evento, papeis e participantes</p>
             </div>
             <span class="ds-tag ds-tag-info" style="margin-left:auto;">⏱ 15 min</span>
         </div>
 
         <div class="grid g3" style="margin-bottom:14px;">
-            <!-- O que é o AMISP -->
+            <!-- O que é o AMISP(E) -->
             <div class="ds-card">
-                <div class="ds-card-header"><div class="ds-card-title">O que é o AMISP e qual a sua importância?</div></div>
+                <div class="ds-card-header"><div class="ds-card-title">O que é o <span data-t="sigla">AMISPE</span> e qual a sua importância?</div></div>
                 <div class="ds-card-body">
-                    A Análise Multidisciplinar Inicial de Segurança e Privacidade (AMISP) é um evento que ocorre o mais cedo possível dentro do ciclo de vida de uma solução digital. Seu objetivo é levantar e mapear precocemente as questões pertinentes à segurança da solução bem como os aspectos de privacidade e proteção de dados pessoais por ela tratados.
+                    A <span data-t="nome">Análise Multidisciplinar Inicial de Segurança, Privacidade e Ética</span> (<span data-t="sigla">AMISPE</span>) é um evento que ocorre o mais cedo possível dentro do ciclo de vida de uma solução digital. Seu objetivo é levantar e mapear precocemente as questões pertinentes à segurança da solução bem como os aspectos de privacidade e proteção de dados pessoais por ela tratados.
+                    <p class="so-amispe" style="margin-top:8px;">A partir da versão 3.0, o evento inclui atividades específicas relacionadas aos <strong>aspectos éticos</strong> em soluções de IA e transacionais (<em>ética by design</em>): analisar, avaliar e mitigar o impacto humano e social da solução.</p>
                 </div>
             </div>
 
             <!-- Em que situação -->
             <div class="ds-card">
-                <div class="ds-card-header"><div class="ds-card-title">Em que situação faço um AMISP?</div></div>
+                <div class="ds-card-header"><div class="ds-card-title">Em que situação faço um <span data-t="sigla">AMISPE</span>?</div></div>
                 <div class="ds-card-body">
                     <ul>
                         <li>Sistema novo na fase de 'prospecção' ou etapa inicial de definição.</li>
-                        <li>Sistema já existente que tenha grande mudança de requisitos com possíveis impactos de segurança e/ou privacidade.</li>
-                        <li>Sistema legado cuja análise multidisciplinar de segurança e/ou privacidade seja demandada ou notoriamente necessária.</li>
+                        <li>Sistema já existente que tenha grande mudança de requisitos com possíveis impactos de segurança<span class="so-amisp"> e/ou privacidade</span><span class="so-amispe">, privacidade e/ou ética</span>.</li>
+                        <li>Sistema legado cuja análise multidisciplinar de segurança<span class="so-amisp"> e/ou privacidade</span><span class="so-amispe">, privacidade e/ou ética</span> seja demandada ou notoriamente necessária.</li>
                     </ul>
                 </div>
             </div>
@@ -442,7 +491,7 @@
                         <li><strong>Facilitador</strong> — Pessoa com experiência em facilitação de eventos como <a href="http://unifica.serpro/v211/praticas/design-thinking" target="_blank">Design Thinking</a> e <a href="http://unifica.serpro/v211/praticas/inception" target="_blank">Lean Inception</a>.</li>
                         <li><strong>Redator (Autor)</strong> — Responsável por elaborar o documento ou ata com o registro do evento.</li>
                         <li><strong>Equipe da Solução</strong> — Desenvolvedores e demais membros técnicos comprometidos com a solução.</li>
-                        <li><strong>Especialistas</strong> — Profissionais com conhecimento especializado em segurança, legislação, privacidade, infraestrutura etc.</li>
+                        <li><strong>Especialistas</strong> — Profissionais com conhecimento especializado em segurança, legislação, privacidade<span class="so-amispe">, ética</span>, infraestrutura etc.</li>
                         <li><strong>Partes Interessadas</strong> — Demais profissionais envolvidos que podem colaborar na tomada de decisões.</li>
                     </ol>
                 </div>
@@ -454,8 +503,8 @@
                 <div class="ds-card-body">
                     <ol>
                         <li>Documento ou ata com os elementos preliminares do <a href="https://lgpd.gitpages.serpro/conteudo/desenvolvimento-confiavel/modelo-de-confianca/" target="_blank">modelo de confiança</a>.</li>
-                        <li>Conhecimento inicial sobre segurança e privacidade internalizado na equipe.</li>
-                        <li>Complementação da sensibilização da equipe relativa a 'Segurança &amp; Privacidade'.</li>
+                        <li>Conhecimento inicial sobre segurança<span class="so-amisp"> e privacidade</span><span class="so-amispe">, privacidade e ética</span> internalizado na equipe.</li>
+                        <li>Complementação da sensibilização da equipe relativa a 'Segurança &amp; Privacidade<span class="so-amispe"> &amp; Ética</span>'.</li>
                         <li>Em caso de sistema legado, elaboração de um <a href="https://lgpd.gitpages.serpro/conteudo/desenvolvimento-confiavel/wiki/dev/ral/" target="_blank">RAL</a>.</li>
                     </ol>
                 </div>
@@ -480,7 +529,7 @@
 
         <!-- Participantes -->
         <div class="ds-card">
-            <div class="ds-card-header"><div class="ds-card-title">Quais são as pessoas que representam os papeis do AMISP no nosso sistema?</div></div>
+            <div class="ds-card-header"><div class="ds-card-title">Quais são as pessoas que representam os papeis do <span data-t="sigla">AMISPE</span> no nosso sistema?</div></div>
             <div class="ds-card-body">
                 <p style="margin-bottom:12px;">Agora que já entendemos os papeis, vamos nomeá-los?</p>
 
@@ -558,7 +607,7 @@
             <div class="ds-section-num">2</div>
             <div>
                 <h2>Vamos saber mais sobre a solução?</h2>
-                <p>Apresentação do sistema com foco em segurança e privacidade</p>
+                <p>Apresentação do sistema com foco em segurança<span class="so-amisp"> e privacidade</span><span class="so-amispe">, privacidade e ética</span></p>
             </div>
             <span class="ds-tag ds-tag-info" style="margin-left:auto;">⏱ 10 min</span>
         </div>
@@ -573,7 +622,7 @@
                     <li>Há integração com outros sistemas?</li>
                     <li>Quais as restrições e premissas?</li>
                 </ol>
-                <p style="font-size:11px;color:var(--ds-text-2);">Enquanto isso, os participantes vão levantando questionamentos ou fazendo anotações relevantes sob o ponto de vista de segurança e privacidade.</p>
+                <p style="font-size:11px;color:var(--ds-text-2);">Enquanto isso, os participantes vão levantando questionamentos ou fazendo anotações relevantes sob o ponto de vista de segurança<span class="so-amisp"> e privacidade</span><span class="so-amispe">, privacidade e ética</span>.</p>
             </div>
         </div>
 
@@ -807,7 +856,184 @@
     </section>
 
     <!-- ================================================================
-         SEÇÃO 4 — Riscos
+         SEÇÃO 4 — Análise Ética (somente AMISPE)
+    ================================================================ -->
+    <section class="ds-section so-amispe" id="s-etica">
+        <div class="ds-section-hd">
+            <div class="ds-section-num">4</div>
+            <div>
+                <h2>Vamos entender o sistema sob o ponto de vista da ética?</h2>
+                <p>Canvas Ética — identificação dos valores éticos que devem orientar a solução</p>
+            </div>
+        </div>
+
+        <!-- Contexto -->
+        <div class="grid g3" style="margin-bottom:14px;">
+            <div class="ds-card">
+                <div class="ds-card-header"><div class="ds-card-title">Qual o objetivo da Análise Ética?</div></div>
+                <div class="ds-card-body">
+                    Verificar como o sistema se comporta em relação ao <strong>bem-estar humano e social</strong>: quais valores éticos são relevantes para a solução, cuja não observância pode prejudicar uma pessoa ou um grupo de pessoas.
+                </div>
+            </div>
+            <div class="ds-card">
+                <div class="ds-card-header"><div class="ds-card-title">De onde partimos?</div></div>
+                <div class="ds-card-body">
+                    O processo começa no <strong>Levantamento de Escopo e Contexto (LEC)</strong>, aba Ética, com a pergunta <em>"É possível identificar valores éticos associados à solução?"</em>. Aqui, os valores identificados são explicitados no canvas.
+                </div>
+            </div>
+            <div class="ds-card">
+                <div class="ds-card-header"><div class="ds-card-title">Referência: IEEE Std 7000™-2021</div></div>
+                <div class="ds-card-body">
+                    A norma estabelece um processo para traduzir conceitos abstratos de ética em <strong>requisitos de engenharia verificáveis</strong>, considerando valores como transparência, sustentabilidade, privacidade, justiça e responsabilidade.
+                </div>
+            </div>
+        </div>
+
+        <!-- Canvas Ética -->
+        <div class="ds-card" style="margin-bottom:20px;">
+            <div class="ds-card-header"><div class="ds-card-title">Canvas Ética</div></div>
+            <div class="ds-card-body">
+                <p style="font-size:10px;color:var(--ds-text-2);margin-bottom:14px;">💡 <em>Escolha os valores éticos que devem orientar a solução, trazendo dos "Conceitos e Exemplos de Apoio" (abaixo) os mais relevantes. Ative o modo <strong>Editar</strong> para preencher.</em></p>
+
+                <div class="etica-grid">
+                    <div class="etica-col etc-valores">
+                        <div class="etica-hd"><span class="ico">💎</span>Valores</div>
+                        <div class="canvas-body" contenteditable="true" data-field="etica-valores">
+                            Garante <strong>autonomia</strong> (sem manipulação) do usuário?<br>
+                            A solução prioriza a <strong>rastreabilidade</strong> e <strong>capacidade de resposta às partes interessadas</strong> (Cuidado)?<br>
+                            Assegura a <strong>confidencialidade</strong> e a <strong>integridade</strong> dos dados?<br>
+                            Solução <strong>robusta, sustentável</strong> e fácil de evoluir ao longo do tempo?<br>
+                            A base de dados é <strong>confiável</strong>?
+                        </div>
+                    </div>
+                    <div class="etica-col etc-transp">
+                        <div class="etica-hd"><span class="ico">🔍</span>Transparência</div>
+                        <div class="canvas-body" contenteditable="true" data-field="etica-transparencia">
+                            As informações importantes estão <strong>abertas</strong> para que o usuário <strong>entenda</strong> o resultado?<br>
+                            O usuário pode <strong>ver</strong> o que levou a uma decisão, ação ou comportamento do sistema?<br>
+                            O sistema consegue <strong>explicar</strong> como a decisão foi tomada? Possui <strong>auditoria</strong> contínua?
+                        </div>
+                    </div>
+                    <div class="etica-col etc-sust">
+                        <div class="etica-hd"><span class="ico">🌍</span>Sustentabilidade<br>Respeito</div>
+                        <div class="canvas-body" contenteditable="true" data-field="etica-sustentabilidade">
+                            Como o sistema impacta o <strong>emprego</strong> ou a <strong>saúde</strong> das pessoas?<br>
+                            Estamos considerando os efeitos no <strong>meio ambiente</strong> e nas <strong>interações sociais</strong>?<br>
+                            O sistema está sendo desenvolvido com <strong>Respeito</strong> e <strong>Sustentabilidade</strong> em mente?
+                        </div>
+                    </div>
+                    <div class="etica-col etc-equidade">
+                        <div class="etica-hd"><span class="ico">⚖️</span>Equidade<br>Imparcialidade</div>
+                        <div class="canvas-body" contenteditable="true" data-field="etica-equidade">
+                            O sistema está agindo com <strong>Justiça</strong> e <strong>Equidade</strong>?<br>
+                            O sistema está <strong>favorecendo</strong> ou <strong>desfavorecendo</strong> indevidamente algum grupo?<br>
+                            O sistema pode estar <strong>discriminando</strong> sistemática e injustamente certos grupos?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="canvas-cell" style="margin-top:10px;">
+                    <div class="canvas-hd">➕ Outros valores éticos relevantes para a solução</div>
+                    <div class="canvas-body" contenteditable="true" data-field="etica-outros" placeholder="Ex.: autonomia, responsabilidade, governança de dados, privacidade, inclusão..."></div>
+                </div>
+
+                <p style="font-size:11px;color:var(--ds-text-2);margin-top:12px;">🎯 Os <strong>Valores Éticos</strong> são o ponto de partida para os <strong>Requisitos Éticos</strong> da solução: a tradução de valores abstratos em especificações concretas, mensuráveis e verificáveis que o sistema deve atender.</p>
+            </div>
+        </div>
+
+        <!-- Material de apoio -->
+        <h3 style="font-size:14px;font-weight:700;color:var(--ds-primary-dark);margin-bottom:10px;">📚 Conceitos e Exemplos de Apoio</h3>
+
+        <div class="acc open">
+            <div class="acc-hd" onclick="this.parentElement.classList.toggle('open')">Valores éticos centrais <span class="acc-arrow">▼</span></div>
+            <div class="acc-body">
+                <div class="etica-grid">
+                    <div class="etica-apoio-col etc-valores">
+                        <h4>Valores Éticos</h4>
+                        <p>Princípio fundamental para o bem-estar humano, identificado como relevante para a aplicação. Exemplos: <strong>privacidade, segurança, transparência, responsabilidade, justiça</strong>.</p>
+                        <span class="etica-chip">Autonomia preservada</span>
+                        <span class="etica-chip">Responsabilidade perante as partes interessadas</span>
+                        <span class="etica-chip">Assegura alinhamento com a governança de dados e privacidade</span>
+                        <span class="etica-chip">Garante a integridade dos dados</span>
+                        <span class="etica-chip">Desenvolvimento voltado para eficiência, manutenibilidade, operabilidade, capacidade de suporte</span>
+                        <span class="etica-chip">Garante a veracidade</span>
+                    </div>
+                    <div class="etica-apoio-col etc-transp">
+                        <h4>Transparência</h4>
+                        <p>As informações relevantes para as causas de algum comportamento, ação ou decisão da aplicação devem estar disponíveis para que os usuários entendam os resultados.<br><strong>Explicabilidade:</strong> justificar "por quê?" uma decisão foi tomada.<br><strong>Interpretabilidade:</strong> entender "como" uma decisão foi tomada.</p>
+                        <span class="etica-chip">Assegura Explicabilidade</span>
+                        <span class="etica-chip">Assegura Interpretabilidade</span>
+                        <span class="etica-chip">Assegura Auditabilidade</span>
+                    </div>
+                    <div class="etica-apoio-col etc-sust">
+                        <h4>Sustentabilidade e Respeito</h4>
+                        <p>Se os resultados do sistema podem impactar áreas da vida relacionadas ao bem-estar humano, como por exemplo: <strong>emprego, meio ambiente, saúde, interações sociais, educação</strong>.</p>
+                        <span class="etica-chip">Respeito ao meio ambiente</span>
+                        <span class="etica-chip">Respeito às normas e leis</span>
+                        <span class="etica-chip">Respeito aos direitos humanos</span>
+                        <span class="etica-chip">Permite a ação e supervisão humana</span>
+                        <span class="etica-chip">Comprometido com a robustez e confiabilidade</span>
+                    </div>
+                    <div class="etica-apoio-col etc-equidade">
+                        <h4>Equidade e Imparcialidade</h4>
+                        <p>As pessoas devem ter direitos e oportunidades iguais e não devem ser favorecidas ou desfavorecidas indevidamente pela aplicação, que será tendenciosa quando discriminar sistemática e injustamente certos indivíduos ou grupos em favor de outros.</p>
+                        <span class="etica-chip">Não discrimina pessoas ou grupos</span>
+                        <span class="etica-chip">Não reproduz vieses discriminatórios</span>
+                        <span class="etica-chip">Não reproduz preconceito</span>
+                        <span class="etica-chip">Incentiva a tolerância</span>
+                        <span class="etica-chip">Assegura a acessibilidade</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="acc">
+            <div class="acc-hd" onclick="this.parentElement.classList.toggle('open')">Valores e Éticos — conceitos e perguntas-chave <span class="acc-arrow">▼</span></div>
+            <div class="acc-body">
+                <div class="grid g2">
+                    <dl class="etica-def">
+                        <dt>Autonomia preservada</dt>
+                        <dd>Manter a autodeterminação plena dos indivíduos e sua capacidade de tomar decisões e fazer escolhas.<em>O usuário estará livre de manipulação?</em></dd>
+                        <dt>Responsabilidade perante as partes interessadas</dt>
+                        <dd>Comunicar às partes interessadas informações sobre a forma como os requisitos são aplicados. Sendo aplicação de IA, informar de forma clara e proativa sobre as capacidades e limitações do sistema.<em>A solução prioriza a rastreabilidade, a transparência e a capacidade de resposta às partes interessadas?</em></dd>
+                        <dt>Assegura alinhamento com a governança de dados e privacidade</dt>
+                        <dd>Respeito à privacidade, à qualidade dos dados e o acesso aos dados.<em>Os direitos do titular de dados pessoais são preservados?</em></dd>
+                    </dl>
+                    <dl class="etica-def">
+                        <dt>Garante integridade dos dados</dt>
+                        <dd>Dados podem ser inúteis ou prejudiciais se estiverem corrompidos ou manipulados.<em>Pratica ações para prevenir dados corrompidos ou imprecisos?</em></dd>
+                        <dt>Desenvolvimento voltado para eficiência, manutenibilidade, operabilidade, capacidade de suporte</dt>
+                        <dd>Solução robusta, sustentável e fácil de evoluir ao longo do tempo.<em>Software responsável que conecta os pilares da excelência técnica?</em></dd>
+                        <dt>Garante a veracidade</dt>
+                        <dd>Refere-se à confiabilidade, precisão e integridade das informações, gerando confiança das partes interessadas.<em>A fonte dos dados é confiável, possui auditoria contínua?</em></dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="acc">
+            <div class="acc-hd" onclick="this.parentElement.classList.toggle('open')">Valores éticos típicos (IEEE Std 7000™-2021, Anexo G) <span class="acc-arrow">▼</span></div>
+            <div class="acc-body">
+                <div class="grid g3">
+                    <div><strong>Autonomia</strong> — independência</div>
+                    <div><strong>Cuidado</strong> — responsabilidade perante as partes interessadas</div>
+                    <div><strong>Controle</strong> — governança</div>
+                    <div><strong>Imparcialidade</strong> — justiça</div>
+                    <div><strong>Inclusão</strong> — acessibilidade</div>
+                    <div><strong>Inovação</strong> — criatividade</div>
+                    <div><strong>Qualidade</strong> — integridade</div>
+                    <div><strong>Privacidade</strong> — respeito à confidencialidade</div>
+                    <div><strong>Respeito</strong> — ao meio ambiente, à informação, às normas e leis</div>
+                    <div><strong>Sustentabilidade</strong> — eficiência, manutenibilidade, operabilidade, capacidade de suporte</div>
+                    <div><strong>Transparência</strong> — explicabilidade, auditabilidade</div>
+                    <div><strong>Confiança</strong> — confiabilidade, veracidade</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================================================
+         SEÇÃO 5 — Riscos (4 no modo AMISP)
     ================================================================ -->
     <section class="ds-section" id="s4">
         <div class="ds-section-hd">
@@ -928,7 +1154,7 @@
     </section>
 
     <!-- ================================================================
-         SEÇÃO 5 — Ações e Retrospectiva
+         SEÇÃO 6 — Ações e Retrospectiva (5 no modo AMISP)
     ================================================================ -->
     <section class="ds-section" id="s5">
         <div class="ds-section-hd">
@@ -974,7 +1200,7 @@
         <div class="ds-card" style="margin-bottom:14px;">
             <div class="ds-card-header"><div class="ds-card-title">🚀 Quais são nossos próximos passos?</div></div>
             <div class="ds-card-body">
-                <div contenteditable="true" data-field="proximos-passos" placeholder="Registre os próximos passos do time após o AMISP..." style="min-height:80px;color:var(--ds-text-2);"></div>
+                <div contenteditable="true" data-field="proximos-passos" placeholder="Registre os próximos passos do time após o AMISPE..." data-t-placeholder="Registre os próximos passos do time após o {sigla}..." style="min-height:80px;color:var(--ds-text-2);"></div>
             </div>
         </div>
 
@@ -1007,7 +1233,7 @@
 
 <footer>
     <p>SERPRO — Serviço Federal de Processamento de Dados</p>
-    <p>AMISP — Análise Multidisciplinar Inicial de Segurança e Privacidade</p>
+    <p><span data-t="sigla">AMISPE</span> — <span data-t="nome">Análise Multidisciplinar Inicial de Segurança, Privacidade e Ética</span></p>
 </footer>
 
 <script>
@@ -1016,6 +1242,36 @@
         const editing = document.body.classList.toggle('editing');
         const btn = document.getElementById('editToggle');
         btn.textContent = editing ? '✅ Finalizar Edição' : '✏️ Editar';
+    }
+
+    /* ── Seletor AMISP / AMISPE ───────────────────────────── */
+    const MODOS = {
+        amisp:  { sigla: 'AMISP',  nome: 'Análise Multidisciplinar Inicial de Segurança e Privacidade' },
+        amispe: { sigla: 'AMISPE', nome: 'Análise Multidisciplinar Inicial de Segurança, Privacidade e Ética' }
+    };
+    const MODO_KEY = 'amisp_modo';
+    let modoAtual = 'amispe';
+    function setModo(modo, opts = {}) {
+        if (!MODOS[modo]) return;
+        modoAtual = modo;
+        const m = MODOS[modo];
+        document.body.classList.toggle('modo-amisp', modo === 'amisp');
+        document.querySelectorAll('[data-t="sigla"]').forEach(el => el.textContent = m.sigla);
+        document.querySelectorAll('[data-t="nome"]').forEach(el => el.textContent = m.nome);
+        document.querySelectorAll('[data-t-placeholder]').forEach(el =>
+            el.setAttribute('placeholder', el.dataset.tPlaceholder.replace('{sigla}', m.sigla)));
+        document.title = `${m.sigla} — ${m.nome}`;
+        document.querySelectorAll('.modo-sel button').forEach(b =>
+            b.classList.toggle('sel', b.dataset.modo === modo));
+        /* Renumera as etapas visíveis */
+        let n = 0;
+        document.querySelectorAll('.ds-main > .ds-section').forEach(sec => {
+            if (getComputedStyle(sec).display === 'none') return;
+            const num = sec.querySelector('.ds-section-num');
+            if (num) num.textContent = ++n;
+        });
+        try { localStorage.setItem(MODO_KEY, modo); } catch (err) {}
+        if (!opts.silencioso) scheduleAutosave();
     }
 
     /* ── Adicionar / remover linha na tabela de ações ────── */
@@ -1087,8 +1343,9 @@
     /* ── Exportar ──────────────────────────────────────────── */
     function exportJSON() {
         const data = {
-            _versao: '1.0',
+            _versao: '1.1',
             _exportado: new Date().toISOString(),
+            modo: modoAtual,
             campos: collectFields(),
             acoes: collectActions(),
             likert: collectLikert()
@@ -1099,7 +1356,7 @@
         const a    = document.createElement('a');
         const ts   = new Date().toISOString().slice(0,10);
         a.href     = url;
-        a.download = `amisp_${ts}.json`;
+        a.download = `${modoAtual}_${ts}.json`;
         a.click();
         URL.revokeObjectURL(url);
         showToast('💾 Arquivo JSON salvo!', 'success');
@@ -1113,6 +1370,9 @@
         reader.onload = e => {
             try {
                 const data = JSON.parse(e.target.result);
+
+                /* Restaura a versão do evento (arquivos antigos não têm "modo") */
+                if (data.modo) setModo(data.modo, { silencioso: true });
 
                 /* Restaura campos simples */
                 if (data.campos) {
@@ -1265,8 +1525,9 @@
         autosaveTimer = setTimeout(() => {
             try {
                 localStorage.setItem(AUTOSAVE_KEY, JSON.stringify({
-                    _versao: '1.0',
+                    _versao: '1.1',
                     _salvo: new Date().toISOString(),
+                    modo: modoAtual,
                     campos: collectFields(),
                     acoes: collectActions(),
                     likert: collectLikert()
@@ -1284,6 +1545,7 @@
         let data = null;
         try { data = JSON.parse(localStorage.getItem(AUTOSAVE_KEY)); } catch (err) { return; }
         if (!data) return;
+        if (data.modo) setModo(data.modo, { silencioso: true });
         if (data.campos) {
             Object.entries(data.campos).forEach(([key, val]) => {
                 const el = document.querySelector(`[data-field="${key}"]`);
@@ -1302,6 +1564,10 @@
         const quando = data._salvo ? new Date(data._salvo).toLocaleString('pt-BR') : '';
         showToast(`📝 Rascunho restaurado${quando ? ' (' + quando + ')' : ''}`, 'success');
     }
+    /* Modo inicial: último escolhido neste navegador (padrão AMISPE) */
+    let modoSalvo = null;
+    try { modoSalvo = localStorage.getItem(MODO_KEY); } catch (err) {}
+    setModo(MODOS[modoSalvo] ? modoSalvo : 'amispe', { silencioso: true });
     restoreAutosave();
 
     /* ================================================================
