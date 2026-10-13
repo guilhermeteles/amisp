@@ -1274,6 +1274,26 @@
         if (!opts.silencioso) scheduleAutosave();
     }
 
+    /* ── Iniciais dos papeis (Facilitador, Redator, DPO) ─── */
+    const PARTICULAS = new Set(['de','da','do','das','dos','e','di','du','del']);
+    function iniciais(nome) {
+        const partes = (nome || '').trim().split(/\s+/)
+            .filter(p => p && !PARTICULAS.has(p.toLowerCase()));
+        if (!partes.length) return '?';
+        if (partes.length === 1) return partes[0].slice(0, 2).toUpperCase();
+        return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
+    }
+    function atualizarIniciais() {
+        document.querySelectorAll('.person').forEach(p => {
+            const av = p.querySelector('.person-av');
+            const nome = p.querySelector('[contenteditable]');
+            if (av && nome) av.textContent = iniciais(nome.textContent);
+        });
+    }
+    document.addEventListener('input', e => {
+        if (e.target.closest('.person')) atualizarIniciais();
+    });
+
     /* ── Adicionar / remover linha na tabela de ações ────── */
     function makeActionRow(risco = ' ', acao = ' ', responsavel = ' ') {
         const tr = document.createElement('tr');
@@ -1398,6 +1418,7 @@
                     });
                 }
 
+                atualizarIniciais();
                 showToast('📂 Preenchimento carregado!', 'success');
                 scheduleAutosave();
             } catch (err) {
@@ -1561,6 +1582,7 @@
             document.querySelectorAll('#likert1 .l-btn').forEach(btn =>
                 btn.classList.toggle('sel', btn.textContent.trim() === String(data.likert)));
         }
+        atualizarIniciais();
         const quando = data._salvo ? new Date(data._salvo).toLocaleString('pt-BR') : '';
         showToast(`📝 Rascunho restaurado${quando ? ' (' + quando + ')' : ''}`, 'success');
     }
