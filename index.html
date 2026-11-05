@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMISPE — Análise Multidisciplinar Inicial de Segurança, Privacidade e Ética</title>
+    <title>GDC — Guia de Desenvolvimento Confiável</title>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* ================================================================
@@ -339,23 +339,6 @@
         }
         #img-lightbox .lb-close:hover { background: rgba(255,255,255,.3); }
 
-        /* ── Seletor AMISP / AMISPE ──────────────────────────────────── */
-        .modo-sel {
-            display: inline-flex; margin-top: 14px; padding: 3px; gap: 3px;
-            background: rgba(255,255,255,.12); border-radius: 99px;
-            border: 1px solid rgba(255,255,255,.25);
-        }
-        .modo-sel button {
-            border: none; cursor: pointer; border-radius: 99px;
-            padding: 7px 16px; font-family: var(--ds-font); font-size: 12px; font-weight: 700;
-            background: transparent; color: rgba(255,255,255,.85); transition: all .18s;
-        }
-        .modo-sel button:hover { background: rgba(255,255,255,.15); }
-        .modo-sel button.sel { background: var(--ds-white); color: var(--ds-primary-dark); }
-        .modo-sel button small { font-weight: 500; opacity: .75; margin-left: 4px; }
-        body.modo-amisp .so-amispe { display: none !important; }
-        body:not(.modo-amisp) .so-amisp { display: none !important; }
-
         /* ── Canvas Ética ────────────────────────────────────────────── */
         .etica-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
         .etica-col  { border: 1px solid var(--etc); border-radius: 6px; overflow: hidden; background: var(--ds-bg); display: flex; flex-direction: column; }
@@ -383,6 +366,103 @@
         .etica-def dd { margin: 2px 0 0; }
         .etica-def dd em { display: block; margin-top: 2px; color: var(--ds-primary); font-style: normal; font-weight: 600; }
 
+        /* ── Trilha GDC ──────────────────────────────────────────────── */
+        .ds-hero .hero-kicker { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; opacity: .7; margin-bottom: 4px; }
+        .gdc-trail {
+            background: var(--ds-white); border-bottom: 1px solid var(--ds-border-light);
+            box-shadow: 0 1px 4px rgba(0,0,0,.06);
+            display: flex; align-items: center; gap: 18px;
+            padding: 10px 32px; overflow-x: auto; white-space: nowrap;
+            position: sticky; top: 61px; z-index: 150; scrollbar-width: thin;
+        }
+        .trail-phase { display: flex; align-items: center; gap: 5px; }
+        .trail-phase-lbl {
+            font-size: 9px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+            color: var(--ds-text-2); margin-right: 2px;
+        }
+        .trail-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 10px; border-radius: 99px; border: 1px solid var(--ds-border);
+            background: var(--ds-white); color: var(--ds-text);
+            font: 700 11px var(--ds-font); text-decoration: none; transition: all .15s;
+        }
+        .trail-chip:hover { border-color: var(--ds-primary); color: var(--ds-primary-dark); }
+        .trail-chip .dot { width: 7px; height: 7px; border-radius: 50%; background: transparent; border: 1.5px solid #b5b5b5; }
+        .trail-chip.ok  .dot { background: var(--ds-success); border-color: var(--ds-success); }
+        .trail-chip.ind .dot { background: var(--ds-primary); border-color: var(--ds-primary); }
+        .trail-chip.nao .dot { background: #d6d6d6; border-color: #d6d6d6; }
+        .trail-chip.nr  .dot { border-style: dashed; }
+        .trail-chip.active { background: var(--ds-primary); border-color: var(--ds-primary); color: var(--ds-white); }
+        .trail-chip.active .dot { border-color: var(--ds-white); }
+        .trail-chip.home { border-style: dashed; }
+
+        .ds-section { scroll-margin-top: 120px; }
+        .lec-tab .ds-tag { white-space: nowrap; }
+        .gdc-step { display: none; }
+        .gdc-step.on { display: block; }
+        body:not([data-step="amispe"]) #editToggle,
+        body:not([data-step="amispe"]) .edit-badge { display: none !important; }
+
+        /* Situação na trilha */
+        .st { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: var(--ds-text-2); }
+        .st::before { content: ''; width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid #b5b5b5; }
+        .st-ok  { color: var(--ds-success); }  .st-ok::before  { background: var(--ds-success); border-color: var(--ds-success); }
+        .st-ind { color: var(--ds-primary); }  .st-ind::before { background: var(--ds-primary); border-color: var(--ds-primary); }
+        .st-nao::before { background: #d6d6d6; border-color: #d6d6d6; }
+        .st-nr::before  { border-style: dashed; }
+        .nota-construcao {
+            margin-top: 6px; padding: 12px 14px; border-radius: var(--r);
+            background: var(--ds-warning-light); color: var(--ds-warning); font-size: 12px; font-weight: 600;
+        }
+
+        /* ── Formulário do LEC ───────────────────────────────────────── */
+        .lec-idx {
+            display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px;
+        }
+        .lec-idx a {
+            font-size: 11px; font-weight: 700; color: var(--ds-primary-dark); text-decoration: none;
+            background: var(--ds-primary-pastel); padding: 4px 10px; border-radius: 99px;
+        }
+        .lec-idx a:hover { background: var(--ds-primary-light); }
+        .lec-in {
+            width: 100%; font: 12px var(--ds-font); color: var(--ds-text);
+            border: 1px solid var(--ds-border); border-radius: 6px; padding: 6px 8px; background: var(--ds-white);
+        }
+        textarea.lec-in { resize: vertical; line-height: 1.5; }
+        select.lec-in { cursor: pointer; }
+        .lec-in:focus { outline: 2px solid var(--ds-primary); outline-offset: -1px; border-color: var(--ds-primary); }
+        .lec-in::placeholder { color: #9a9a9a; font-style: italic; }
+        .lec-f { display: flex; flex-direction: column; gap: 4px; font-size: 11px; font-weight: 700; color: var(--ds-primary-dark); }
+        .lec-ajuda { font-size: 11px; color: var(--ds-text-2); margin-top: 8px; font-weight: 400; }
+        .lec-tab td { vertical-align: middle; font-size: 12px; }
+        .lec-tab td.c { text-align: center; }
+        .lec-tab td .lec-in { border-color: var(--ds-border-light); }
+        .lec-tab td.calc { color: var(--ds-text-2); font-size: 11px; }
+        .lec-tab tr.nec td { background: var(--ds-info-light); }
+        .lec-tab tr.tot td { background: var(--ds-surface); font-weight: 700; }
+        .lec-tab tr.fase td {
+            background: var(--ds-primary-pastel); color: var(--ds-primary-dark);
+            font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em;
+        }
+        .lec-tab a { text-decoration: none; font-weight: 600; }
+        .lec-tab input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--ds-primary); }
+        @media (max-width: 700px) {
+            .ds-header { flex-wrap: wrap; gap: 8px; padding: 10px 16px; }
+            .ds-header-actions { flex-wrap: wrap; }
+            .ds-header-brand { gap: 10px; }
+            .gdc-trail { position: static; }
+            .ds-hero { padding: 22px 16px; }
+        }
+        @media (max-width: 900px) {
+            .lec-tab { display: block; overflow-x: auto; }
+            .gdc-trail { padding: 8px 16px; }
+        }
+        @media print {
+            .gdc-trail, .lec-idx, .nota-construcao { display: none !important; }
+            .lec-in { border: none; padding: 0; }
+            select.lec-in { appearance: none; }
+        }
+
         /* ── Footer ──────────────────────────────────────────────────── */
         footer {
             background: var(--ds-primary-dark); color: rgba(255,255,255,.75);
@@ -402,7 +482,7 @@
             .ds-main { padding: 16px; }
         }
         @media print {
-            .ds-header-actions, .ds-btn, .acc-hd::after, #wysiwyg-bar, .row-del-cell, .modo-sel { display: none !important; }
+            .ds-header-actions, .ds-btn, .acc-hd::after, #wysiwyg-bar, .row-del-cell { display: none !important; }
             .ds-header { position: static; }
             .acc-body { display: block !important; }
         }
@@ -420,8 +500,8 @@
         <div class="ds-header-org">SERPRO</div>
         <div class="ds-header-sep"></div>
         <div>
-            <div class="ds-header-title" data-t="sigla">AMISPE</div>
-            <div class="ds-header-sub" data-t="nome">Análise Multidisciplinar Inicial de Segurança, Privacidade e Ética</div>
+            <div class="ds-header-title">GDC</div>
+            <div class="ds-header-sub">Guia de Desenvolvimento Confiável</div>
         </div>
     </div>
     <div class="ds-header-actions">
@@ -438,15 +518,17 @@
 
 <!-- Hero -->
 <div class="ds-hero">
-    <h1 data-t="sigla">AMISPE</h1>
-    <p><span data-t="nome">Análise Multidisciplinar Inicial de Segurança, Privacidade e Ética</span> — Facilitação de evento</p>
-    <div class="modo-sel" role="group" aria-label="Versão do evento">
-        <button type="button" data-modo="amisp" onclick="setModo('amisp')">AMISP <small>Segurança e Privacidade</small></button>
-        <button type="button" data-modo="amispe" onclick="setModo('amispe')" class="sel">AMISPE <small>+ Ética</small></button>
-    </div>
+    <div class="hero-kicker" id="heroKicker"></div>
+    <h1 id="heroTitle">GDC</h1>
+    <p id="heroSub"></p>
 </div>
+<nav class="gdc-trail" id="gdcTrail" aria-label="Trilha de práticas do GDC"></nav>
 
 <main class="ds-main">
+<div class="gdc-step" id="step-trilha"></div>
+<div class="gdc-step" id="step-lec"></div>
+<div class="gdc-step" id="step-pratica"></div>
+<div class="gdc-step" id="step-amispe">
 
     <!-- ================================================================
          SEÇÃO 1 — Apresentação
@@ -467,7 +549,7 @@
                 <div class="ds-card-header"><div class="ds-card-title">O que é o <span data-t="sigla">AMISPE</span> e qual a sua importância?</div></div>
                 <div class="ds-card-body">
                     A <span data-t="nome">Análise Multidisciplinar Inicial de Segurança, Privacidade e Ética</span> (<span data-t="sigla">AMISPE</span>) é um evento que ocorre o mais cedo possível dentro do ciclo de vida de uma solução digital. Seu objetivo é levantar e mapear precocemente as questões pertinentes à segurança da solução bem como os aspectos de privacidade e proteção de dados pessoais por ela tratados.
-                    <p class="so-amispe" style="margin-top:8px;">A partir da versão 3.0, o evento inclui atividades específicas relacionadas aos <strong>aspectos éticos</strong> em soluções de IA e transacionais (<em>ética by design</em>): analisar, avaliar e mitigar o impacto humano e social da solução.</p>
+                    <p style="margin-top:8px;">A partir da versão 3.0, o evento inclui atividades específicas relacionadas aos <strong>aspectos éticos</strong> em soluções de IA e transacionais (<em>ética by design</em>): analisar, avaliar e mitigar o impacto humano e social da solução.</p>
                 </div>
             </div>
 
@@ -477,8 +559,8 @@
                 <div class="ds-card-body">
                     <ul>
                         <li>Sistema novo na fase de 'prospecção' ou etapa inicial de definição.</li>
-                        <li>Sistema já existente que tenha grande mudança de requisitos com possíveis impactos de segurança<span class="so-amisp"> e/ou privacidade</span><span class="so-amispe">, privacidade e/ou ética</span>.</li>
-                        <li>Sistema legado cuja análise multidisciplinar de segurança<span class="so-amisp"> e/ou privacidade</span><span class="so-amispe">, privacidade e/ou ética</span> seja demandada ou notoriamente necessária.</li>
+                        <li>Sistema já existente que tenha grande mudança de requisitos com possíveis impactos de segurança, privacidade e/ou ética.</li>
+                        <li>Sistema legado cuja análise multidisciplinar de segurança, privacidade e/ou ética seja demandada ou notoriamente necessária.</li>
                     </ul>
                 </div>
             </div>
@@ -491,7 +573,7 @@
                         <li><strong>Facilitador</strong> — Pessoa com experiência em facilitação de eventos como <a href="http://unifica.serpro/v211/praticas/design-thinking" target="_blank">Design Thinking</a> e <a href="http://unifica.serpro/v211/praticas/inception" target="_blank">Lean Inception</a>.</li>
                         <li><strong>Redator (Autor)</strong> — Responsável por elaborar o documento ou ata com o registro do evento.</li>
                         <li><strong>Equipe da Solução</strong> — Desenvolvedores e demais membros técnicos comprometidos com a solução.</li>
-                        <li><strong>Especialistas</strong> — Profissionais com conhecimento especializado em segurança, legislação, privacidade<span class="so-amispe">, ética</span>, infraestrutura etc.</li>
+                        <li><strong>Especialistas</strong> — Profissionais com conhecimento especializado em segurança, legislação, privacidade, ética, infraestrutura etc.</li>
                         <li><strong>Partes Interessadas</strong> — Demais profissionais envolvidos que podem colaborar na tomada de decisões.</li>
                     </ol>
                 </div>
@@ -503,8 +585,8 @@
                 <div class="ds-card-body">
                     <ol>
                         <li>Documento ou ata com os elementos preliminares do <a href="https://lgpd.gitpages.serpro/conteudo/desenvolvimento-confiavel/modelo-de-confianca/" target="_blank">modelo de confiança</a>.</li>
-                        <li>Conhecimento inicial sobre segurança<span class="so-amisp"> e privacidade</span><span class="so-amispe">, privacidade e ética</span> internalizado na equipe.</li>
-                        <li>Complementação da sensibilização da equipe relativa a 'Segurança &amp; Privacidade<span class="so-amispe"> &amp; Ética</span>'.</li>
+                        <li>Conhecimento inicial sobre segurança, privacidade e ética internalizado na equipe.</li>
+                        <li>Complementação da sensibilização da equipe relativa a 'Segurança &amp; Privacidade &amp; Ética'.</li>
                         <li>Em caso de sistema legado, elaboração de um <a href="https://lgpd.gitpages.serpro/conteudo/desenvolvimento-confiavel/wiki/dev/ral/" target="_blank">RAL</a>.</li>
                     </ol>
                 </div>
@@ -607,7 +689,7 @@
             <div class="ds-section-num">2</div>
             <div>
                 <h2>Vamos saber mais sobre a solução?</h2>
-                <p>Apresentação do sistema com foco em segurança<span class="so-amisp"> e privacidade</span><span class="so-amispe">, privacidade e ética</span></p>
+                <p>Apresentação do sistema com foco em segurança, privacidade e ética</p>
             </div>
             <span class="ds-tag ds-tag-info" style="margin-left:auto;">⏱ 10 min</span>
         </div>
@@ -622,7 +704,7 @@
                     <li>Há integração com outros sistemas?</li>
                     <li>Quais as restrições e premissas?</li>
                 </ol>
-                <p style="font-size:11px;color:var(--ds-text-2);">Enquanto isso, os participantes vão levantando questionamentos ou fazendo anotações relevantes sob o ponto de vista de segurança<span class="so-amisp"> e privacidade</span><span class="so-amispe">, privacidade e ética</span>.</p>
+                <p style="font-size:11px;color:var(--ds-text-2);">Enquanto isso, os participantes vão levantando questionamentos ou fazendo anotações relevantes sob o ponto de vista de segurança, privacidade e ética.</p>
             </div>
         </div>
 
@@ -858,7 +940,7 @@
     <!-- ================================================================
          SEÇÃO 4 — Análise Ética (somente AMISPE)
     ================================================================ -->
-    <section class="ds-section so-amispe" id="s-etica">
+    <section class="ds-section" id="s-etica">
         <div class="ds-section-hd">
             <div class="ds-section-num">4</div>
             <div>
@@ -1037,7 +1119,7 @@
     ================================================================ -->
     <section class="ds-section" id="s4">
         <div class="ds-section-hd">
-            <div class="ds-section-num">4</div>
+            <div class="ds-section-num">5</div>
             <div>
                 <h2>Chegou a hora de analisar os riscos de segurança e privacidade</h2>
                 <p>Identificação, classificação e registro de riscos</p>
@@ -1158,7 +1240,7 @@
     ================================================================ -->
     <section class="ds-section" id="s5">
         <div class="ds-section-hd">
-            <div class="ds-section-num">5</div>
+            <div class="ds-section-num">6</div>
             <div>
                 <h2>Vamos definir ações, medidas técnicas e administrativas?</h2>
                 <p>Registro de ações, próximos passos e retrospectiva do evento</p>
@@ -1228,12 +1310,13 @@
             </div>
         </div>
     </section>
+</div>
 
 </main>
 
 <footer>
     <p>SERPRO — Serviço Federal de Processamento de Dados</p>
-    <p><span data-t="sigla">AMISPE</span> — <span data-t="nome">Análise Multidisciplinar Inicial de Segurança, Privacidade e Ética</span></p>
+    <p>GDC — Guia de Desenvolvimento Confiável · LEC, AMISPE e demais práticas</p>
 </footer>
 
 <script>
@@ -1242,36 +1325,6 @@
         const editing = document.body.classList.toggle('editing');
         const btn = document.getElementById('editToggle');
         btn.textContent = editing ? '✅ Finalizar Edição' : '✏️ Editar';
-    }
-
-    /* ── Seletor AMISP / AMISPE ───────────────────────────── */
-    const MODOS = {
-        amisp:  { sigla: 'AMISP',  nome: 'Análise Multidisciplinar Inicial de Segurança e Privacidade' },
-        amispe: { sigla: 'AMISPE', nome: 'Análise Multidisciplinar Inicial de Segurança, Privacidade e Ética' }
-    };
-    const MODO_KEY = 'amisp_modo';
-    let modoAtual = 'amispe';
-    function setModo(modo, opts = {}) {
-        if (!MODOS[modo]) return;
-        modoAtual = modo;
-        const m = MODOS[modo];
-        document.body.classList.toggle('modo-amisp', modo === 'amisp');
-        document.querySelectorAll('[data-t="sigla"]').forEach(el => el.textContent = m.sigla);
-        document.querySelectorAll('[data-t="nome"]').forEach(el => el.textContent = m.nome);
-        document.querySelectorAll('[data-t-placeholder]').forEach(el =>
-            el.setAttribute('placeholder', el.dataset.tPlaceholder.replace('{sigla}', m.sigla)));
-        document.title = `${m.sigla} — ${m.nome}`;
-        document.querySelectorAll('.modo-sel button').forEach(b =>
-            b.classList.toggle('sel', b.dataset.modo === modo));
-        /* Renumera as etapas visíveis */
-        let n = 0;
-        document.querySelectorAll('.ds-main > .ds-section').forEach(sec => {
-            if (getComputedStyle(sec).display === 'none') return;
-            const num = sec.querySelector('.ds-section-num');
-            if (num) num.textContent = ++n;
-        });
-        try { localStorage.setItem(MODO_KEY, modo); } catch (err) {}
-        if (!opts.silencioso) scheduleAutosave();
     }
 
     /* ── Iniciais dos papeis (Facilitador, Redator, DPO) ─── */
@@ -1360,26 +1413,56 @@
         return sel ? sel.textContent.trim() : null;
     }
 
+    /* ── Pacote completo (AMISPE + LEC + notas) ─────────── */
+    function coletarTudo() {
+        return {
+            _versao: '2.0',
+            _exportado: new Date().toISOString(),
+            amispe: { campos: collectFields(), acoes: collectActions(), likert: collectLikert() },
+            lec: Object.assign({}, LEC),
+            notas: Object.assign({}, NOTAS)
+        };
+    }
+    function aplicarAmispe(a) {
+        if (!a) return;
+        if (a.campos) Object.entries(a.campos).forEach(([key, val]) => {
+            const el = document.querySelector(`[data-field="${key}"]`);
+            if (el) el.innerHTML = semComentarios(val);
+        });
+        if (a.acoes && Array.isArray(a.acoes) && a.acoes.length) {
+            const tbody = document.getElementById('actionBody');
+            tbody.innerHTML = '';
+            a.acoes.forEach(row => tbody.appendChild(makeActionRow(semComentarios(row.risco) || ' ', semComentarios(row.acao) || ' ', semComentarios(row.responsavel) || ' ')));
+        }
+        if (a.likert) document.querySelectorAll('#likert1 .l-btn').forEach(btn =>
+            btn.classList.toggle('sel', btn.textContent.trim() === String(a.likert)));
+        atualizarIniciais();
+    }
+    /* Aceita o pacote 2.0 e também arquivos antigos só do AMISPE (campos/acoes/likert) */
+    function aplicarPacote(data) {
+        if (data.amispe || data.lec || data.notas) {
+            aplicarAmispe(data.amispe);
+            if (data.lec) { LEC = Object.assign({}, data.lec); aplicarLEC(); }
+            if (data.notas) NOTAS = Object.assign({}, data.notas);
+        } else {
+            aplicarAmispe(data);
+        }
+        renderTrilha();
+    }
+
     /* ── Exportar ──────────────────────────────────────────── */
     function exportJSON() {
-        const data = {
-            _versao: '1.1',
-            _exportado: new Date().toISOString(),
-            modo: modoAtual,
-            campos: collectFields(),
-            acoes: collectActions(),
-            likert: collectLikert()
-        };
-        const json = JSON.stringify(data, null, 2);
+        const json = JSON.stringify(coletarTudo(), null, 2);
         const blob = new Blob([json], { type: 'application/json' });
         const url  = URL.createObjectURL(blob);
         const a    = document.createElement('a');
         const ts   = new Date().toISOString().slice(0,10);
+        const nome = (LEC['id.nome'] || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase();
         a.href     = url;
-        a.download = `${modoAtual}_${ts}.json`;
+        a.download = `gdc_${nome ? nome + '_' : ''}${ts}.json`;
         a.click();
         URL.revokeObjectURL(url);
-        showToast('💾 Arquivo JSON salvo!', 'success');
+        showToast('💾 Arquivo salvo!', 'success');
     }
 
     /* ── Importar ──────────────────────────────────────────── */
@@ -1390,35 +1473,7 @@
         reader.onload = e => {
             try {
                 const data = JSON.parse(e.target.result);
-
-                /* Restaura a versão do evento (arquivos antigos não têm "modo") */
-                if (data.modo) setModo(data.modo, { silencioso: true });
-
-                /* Restaura campos simples */
-                if (data.campos) {
-                    Object.entries(data.campos).forEach(([key, val]) => {
-                        const el = document.querySelector(`[data-field="${key}"]`);
-                        if (el) el.innerHTML = semComentarios(val);
-                    });
-                }
-
-                /* Restaura tabela de ações */
-                if (data.acoes && Array.isArray(data.acoes)) {
-                    const tbody = document.getElementById('actionBody');
-                    tbody.innerHTML = '';
-                    data.acoes.forEach(row => {
-                        tbody.appendChild(makeActionRow(semComentarios(row.risco) || ' ', semComentarios(row.acao) || ' ', semComentarios(row.responsavel) || ' '));
-                    });
-                }
-
-                /* Restaura Likert */
-                if (data.likert) {
-                    document.querySelectorAll('#likert1 .l-btn').forEach(btn => {
-                        btn.classList.toggle('sel', btn.textContent.trim() === String(data.likert));
-                    });
-                }
-
-                atualizarIniciais();
+                aplicarPacote(data);
                 showToast('📂 Preenchimento carregado!', 'success');
                 scheduleAutosave();
             } catch (err) {
@@ -1538,24 +1593,370 @@
         scheduleAutosave();
     });
 
+    const LEC_TXT = {"seg": ["A solução terá desenvolvimento externo? (Subcontratação de desenvolvimento ou absorção de solução já desenvolvida a até 2 (dois) anos)", "A Solução será desenvolvida totalmente do início, será uma solução nova?", "A solução será desenvolvida dentro dos processos e Políticas de Segurança usados pelo SERPRO?", "A solução exigirá algum mecanismo específico de segurança? (ambiente segmentado e/ou dedicado, firewall dedicado, mecanismo específico de criptografia na aplicação ou na transmissão, etc.)", "A solução processará, armazenará ou se integrará a outras aplicações e/ou processos estratégicos ou que processem ou armazenam dados críticos, sensíveis, confidenciais, estratégicos e/ou sigilosos?", "A solução terá obrigatoriedade regulatória relacionada à Segurança da Informação?", "A solução estará sujeita ou se integrará a aplicações sujeitas a auditorias internas ou externas?", "A solução dependerá de terceiros (APIs externas à aplicação, provedores de nuvem, etc.)?", "A solução faz uso de  codificação antiga como asp, php puro,  entre outras?", "A solução fará uso de modelos de IA externos ao SERPRO?", "É um sistema de missão crítica?"], "ppd": ["A solução trata dados pessoais e/ou dados pessoais sensíveis?", "O Serpro atua como controlador no(s) tratamento(s) existentes na solução que estou desenvolvendo / mantendo?", "A solução faz tratamento de dados de crianças, adolescentes, idosos ou algum grupo vulnerável?", "A solução realiza transferência internacional de dados?", "A solução realiza tratamento em larga escala de dados pessoais?", "A solução faz  tratamentos de dados pessoais com o objetivo de monitorar ou controlar zonas públicas, como ruas, praças, parques, praias, entre outros?", "A solução utiliza Inteligência Artificial (O tratamento é realizado utilizando tecnologias emergentes ou inovadoras  [IA/ML, IoT ou Blockchain]) ?", "A solução realiza alguma avaliação e pontuação de aspectos relativos ao titular de dado, seja quanto ao seu desempenho no trabalho, sua situação econômica, seus dados de saúde, preferências ou interesses pessoais, hábitos de consumo, sua confiabilidade ou comportamento ou sua localização ou deslocamentos (PROFILING / SCORING)?"], "etica": ["É possível identificar valores éticos associados a solução?", "A solução pode gerar discriminação de pessoas ou grupos de pessoas?", "A solução possui transparência, explicabilidade e/ou interpretabilidade  para as partes interessadas?", "A solução pode reproduzir e/ou reforçar vieses  que agravem formas já  existentes de discriminação, preconceitos e/ou estereótipos?", "A solução possui uma abordagem inclusiva levando em consideração as necessidades específicas de diferentes grupos etários, sistemas culturais, grupos linguísticos, pessoas com deficiência?", "A solução pode afetar a sustentabilidade ambiental relacionada ao uso excessivo de recursos energéticos?", "A equipe da solução possui conhecimento sobre princípios de qualidade de dados, metadados, linhagem e modelagem de dados?", "O time da solução está orientado a preservar privacidade, sigilo e segredo de negócio?", "O time da solução tem condição de identificar questões relacionadas a violação de propriedade intelectual?"], "etica_intro": "Demonstra que o Serpro reconhece seu papel central na sociedade como formador de bem-estar e portador de progresso social", "proposito": ["Instigar ou induzir o comportamento da pessoa natural ou de grupos de maneira que cause danos à saúde, à segurança ou a outros direitos fundamentais próprios ou de terceiros", "Explorar quaisquer vulnerabilidades da pessoa natural ou de grupos com o objetivo ou o efeito de induzir o seu comportamento de maneira que cause danos à saúde, à segurança ou outros a direitos fundamentais próprios ou de terceiros", "Avaliar os traços de personalidade, as características ou o comportamento passado, criminal ou não, de pessoas singulares ou grupos, para avaliação de risco de cometimento de crimes, de infrações ou de reincidência", "Possibilitar a produção ou disseminação ou facilitar a criação de material que caracterize ou represente abuso ou exploração sexual de crianças e  adolescentes", "Permitir ao poder público - avaliar, classificar ou ranquear as pessoas naturais, com base no seu comportamento social ou em atributos da sua personalidade, por meio de pontuação universal, para o acesso a bens e serviços e políticas públicas, de forma ilegítima ou desproporcional", "Sistemas de armas autônomas (SAA)", "Sistemas de identificação biométrica à distância, em tempo real e em espaços acessíveis ao público, com exceção das seguintes hipóteses:\na) instrução de inquérito ou processo criminal, mediante autorização judicial prévia e motivada, quando houver indícios razoáveis da autoria ou participação em infração penal, a prova não puder ser feita por outros meios disponíveis e o fato investigado não constituir infração penal de menor potencial ofensivo\nb) busca de vítimas de crimes e de pessoas desaparecidas, ou em circunstâncias  que envolvam ameaça grave e iminente à vida ou à integridade física de pessoas naturais;\nc) flagrante delito de crimes punidos com pena privativa de liberdade superior a 2 (dois) anos, com imediata comunicação à autoridade judicial;\nd) recaptura de réus evadidos e cumprimento de mandados de prisão e de medidas restritivas ordenadas pelo Poder Judiciário."], "pee": ["Necessita de especialista externo de segurança", "Necessita de especialista externo de privacidade e proteçao de dados", "Necessita de especialista externo em ética"], "spe": ["Desconhece ou inabilitado", "Básico - conhece e é habilitado, mas inexperiente", "Intermediário - pratica e tem alguma experiência", "Avançado - grande experiência e/ou agente local do tema", "Especialista - Formação específica  no tema ou área especialista"], "esp_ex": ["[SEG] Autenticação: Gov.Br", "[SEG] Autorização", "[PPD] Anonimização ou Pseudonimização", "[PPD] Tomada de decisão automatizada", "[ÉTICA] Transparência para as partes interessadas", "[ÉTICA] Governança de Dados"], "excecao_sast": ["Exceção para NÃO execução do SAST e DAST, mesmo indicado", "✔ Soluções de prateleira", "✔ Sistemas desktop", "✔ Aplicações mobile, desde que não tenham integrações com APIs. Caso eles façam chamadas a uma API específica, é necessário realizar o scan na API", "✔ Sistemas desenvolvidos em PSA – Plataforma de Soluções Analíticas", "✔ Sistemas com Captcha que não possa ser desabilitado ou que não possuam login por Certificado Digital"], "metodologia": "O LEC (Levantamento de Escopo e Contexto) é uma ferramenta de reflexão sobre uma solução digital no que se refere aos princípios da segurança, privacidade e ética by design (confiança by design). \nEsta reflexão ajuda na \"alfaiataria\" de processo que compreende definir quais tarefas executar, com qual nível de exigência executar e com quais profissionais especialistas contar para atingir o objetivo de dispor do mínimo de recursos para atender as reais necessidades de segurança, privacidade e ética (confiança)."};
+    /* ================================================================
+       TRILHA GDC — passos, LEC (com as regras da planilha v2.0) e práticas
+    ================================================================ */
+    const GDC_GUIA = 'https://lgpd.gitpages.serpro/conteudo/desenvolvimento-confiavel/';
+    const FASES = [
+        { id: 'pro', nome: 'Planejamento' }, { id: 'req', nome: 'Requisitos' }, { id: 'des', nome: 'Design' },
+        { id: 'imp', nome: 'Implementação' }, { id: 'ver', nome: 'Verificação' }, { id: 'ent', nome: 'Entrega' },
+        { id: 'sus', nome: 'Sustentação' }
+    ];
+    const PRATICAS = [
+        { id: 'lec',    cod: 'PRO01', fase: 'pro', curto: 'LEC',    nome: 'Levantamento de Escopo e Contexto',
+          desc: 'Primeira atividade do fluxo: reflexão sobre escopo e contexto da solução que gera a Análise Crítica e o Plano de Execução.' },
+        { id: 'amispe', cod: 'PRO02', fase: 'pro', curto: 'AMISPE', nome: 'Análise Multidisciplinar Inicial de Segurança, Privacidade e Ética',
+          desc: 'Evento multidisciplinar, o mais cedo possível, para mapear questões de segurança, privacidade e ética da solução.' },
+        { id: 'req01', cod: 'REQ01', fase: 'req', nome: 'Atribuir Nível de Sensibilidade',
+          desc: 'Classificar a solução e seus dados conforme a sensibilidade, para definir o rigor dos controles.' },
+        { id: 'req02', cod: 'REQ02', fase: 'req', nome: 'Especificar Requisitos de Segurança e Privacidade (RNF)',
+          desc: 'Transformar as necessidades de segurança e privacidade em requisitos não funcionais verificáveis.' },
+        { id: 'req03', cod: 'REQ03', fase: 'req', nome: 'Especificar Casos de Abuso e Mau Uso para S&P',
+          desc: 'Descrever como a solução pode ser usada de forma indevida ou atacada, para prever os controles.' },
+        { id: 'req04', cod: 'REQ04', fase: 'req', nome: 'Especificar a "Privacidade By Default"',
+          desc: 'Definir o comportamento padrão mais protetivo: coletar e mostrar só o necessário.' },
+        { id: 'req05', cod: 'REQ05', fase: 'req', nome: 'Descrever o Ciclo de Vida do Tratamento de Dados Pessoais',
+          desc: 'Descrever coleta, uso, armazenamento, compartilhamento e eliminação dos dados pessoais.' },
+        { id: 'req06', cod: 'REQ06', fase: 'req', nome: 'Especificar Relacionamento com o Titular',
+          desc: 'Definir como o titular é informado e como exerce seus direitos (acesso, correção, eliminação etc.).' },
+        { id: 'des01', cod: 'DES01', fase: 'des', nome: 'Design de Segurança e Privacidade na Arquitetura',
+          desc: 'Incorporar controles de segurança e privacidade nas decisões de arquitetura.' },
+        { id: 'des02', cod: 'DES02', fase: 'des', nome: 'Definir e Minimizar Superfície de Ataque',
+          desc: 'Mapear os pontos de entrada da solução e reduzir o que fica exposto.' },
+        { id: 'des03', cod: 'DES03', fase: 'des', nome: 'Classificar Risco dos Dados — Metadados, Modelagem com MCS',
+          desc: 'Classificar o risco dos dados no modelo, registrando-o nos metadados.' },
+        { id: 'des04', cod: 'DES04', fase: 'des', nome: 'Realizar Modelagem de Ameaças',
+          desc: 'Identificar ameaças à arquitetura e definir as mitigações.' },
+        { id: 'imp01', cod: 'IMP01', fase: 'imp', nome: 'Implementar Código Seguro',
+          desc: 'Aplicar práticas de codificação segura durante a implementação.' },
+        { id: 'imp02', cod: 'IMP02', fase: 'imp', nome: 'Realizar Análise Estática na Integração Contínua',
+          desc: 'Executar análise estática de código (SAST) a cada integração.' },
+        { id: 'ver01', cod: 'VER01', fase: 'ver', nome: 'Executar Testes de Segurança',
+          desc: 'Verificar se os requisitos e controles de segurança funcionam como previsto.' },
+        { id: 'ver02', cod: 'VER02', fase: 'ver', nome: 'Executar Testes de Privacidade',
+          desc: 'Verificar se os requisitos de privacidade são atendidos.' },
+        { id: 'ver03', cod: 'VER03', fase: 'ver', nome: 'Executar Análise Estática na Verificação (SAST)',
+          desc: 'Análise estática do código na fase de verificação.' },
+        { id: 'ver04', cod: 'VER04', fase: 'ver', nome: 'Executar Análise Dinâmica (DAST)',
+          desc: 'Análise dinâmica da aplicação em execução.' },
+        { id: 'ent01', cod: 'ENT01', fase: 'ent', curto: 'AFISPE', nome: 'Avaliação Final de Implementação de Segurança e Privacidade',
+          desc: 'Evento final que avalia se o que foi previsto em segurança e privacidade foi implementado.' },
+        { id: 'sus01', cod: 'SUS01', fase: 'sus', nome: 'Monitoração e Resposta a Incidentes',
+          desc: 'Acompanhar a solução em produção e responder a incidentes.' },
+        { id: 'sus02', cod: 'SUS02', fase: 'sus', nome: 'Auditoria e Prestação de Contas',
+          desc: 'Manter registros e evidências para auditoria e prestação de contas.' }
+    ];
+    const PRAT = Object.fromEntries(PRATICAS.map(p => [p.id, p]));
+
+    /* ── Opções (iguais às listas da planilha) ───────────── */
+    const OP_SNP  = [['', '—'], ['npr', '🔲 Não é possível responder'], ['sim', '✅ Sim'], ['nao', '❌ Não']];
+    const OP_SNPA = OP_SNP.concat([['na', '⚪ Não se aplica']]);
+    const OP_IA   = [['', '—'], ['nao_utiliza', 'Não Utiliza'], ['acessoria', 'Utiliza de Forma Acessória'], ['solucao', 'Solução de IA']];
+    const OP_SETOR = [['', '—'], ['judiciario', 'Judiciário'], ['outros', 'Outros']];
+    const OP_SN   = [['', '—'], ['sim', 'Sim'], ['nao', 'Não']];
+    const OP_SPE  = [['', '—'], ['0', '0'], ['1', '1'], ['2', '2'], ['3', '3'], ['4', '4']];
+    const DIE_SEL = {
+        attr: { rot: 'Quantidade estimada de atributos (campos)', un: 'atributos',
+                op: ['1- Menor ou igual a 5 dados', '2- Maior que 5 e menor ou igual a 10', '3- Maior que 10 e menor ou igual a 20', '4- Maior que 20 e menor ou igual a 50', '5- Maior que 50'], pts: [1, 3, 6, 9, 12] },
+        pess: { rot: 'Número de pessoas afetadas ao longo do uso da solução', un: 'pessoas',
+                op: ['1- < 10.000', '2- >= 10.000 e < 500 mil', '3- >= 500.000 e < 1 milhão', '4- >= 1 milhão e < 1.5 milhões', '5- >= 1.5 milhões e < 2 milhões', '6- >= 2 milhões'], pts: [1, 5, 10, 15, 20, 25] },
+        abr:  { rot: 'Abrangência da solução (Nacional, Regional etc.)', un: '',
+                op: ['1- Municipal', '2- Estadual', '3- Regional', '4- Nacional', '5- Internacional'], pts: [0.5, 1, 1.5, 2, 3] },
+        freq: { rot: 'Frequência de utilização da solução', un: '',
+                op: ['1- Tratamento Anual', '2- Tratamento Mensal', '3- Tratamento Semanal', '4- Tratamento Diário', '5- Múltiplas ocorrências diárias'], pts: [1, 2, 3, 4, 5] },
+        ret:  { rot: 'Tempo de retenção', un: '',
+                op: ['1- Menor ou igual a 1 ano', '2- Maior que 1 ano e menor ou igual a 5 anos', '3- Maior que 5 e menor ou igual a 10 anos', '4- Maior que 10 anos'], pts: [1, 2, 3, 4] }
+    };
+    const PPD_PTS = [2, 0, 3, 1, 10, 5, 5, 5];
+    const PEE_NAO = ['Time com especialistas em segurança', 'Time com especialistas em privacidade e proteção de dados pessoais', 'Time com especialistas em ética'];
+    const ETICA_PLANO = [
+        ['✔ Listar os valores éticos na Análise Ética na AMISPE', '✔ Discutir com os gestores a necessidade de garantir os valores éticos na Análise Ética na AMISPE'],
+        ['✔ Listar medidas para eliminar discriminação de pessoas ou grupos na Análise Ética no AMISPE', '✔ Listar medidas que garantam a não discriminação de pessoas ou grupo na Análise Ética no AMISPE'],
+        ['✔ Listar medidas para garantir a transparência e a explicabilidade na Análise Ética no AMISPE', '✔ Discutir com os gestores a necessidade de garantir a transparência e a explicabilidade na Análise Ética no AMISPE'],
+        ['✔ Listar medidas para eliminar a reprodução e/ou reforço vieses que agravem formas já existentes de discriminação, preconceitos e/ou estereótipos na Análise Ética no AMISPE', '✔ Listar medidas que garantam a não reprodução e/ou reforço vieses que agravem formas já existentes de discriminação, preconceitos e/ou estereótipos na Análise Ética no AMISPE'],
+        ['✔ Listar medidas que garantam a abordagem inclusiva levando em consideração as necessidades específicas de diferentes grupos etários, sistemas culturais, grupos linguísticos, pessoas com deficiência na Análise Ética no AMISPE', '✔ Discutir com os gestores a necessidade de abordagem inclusiva na Análise Ética no AMISPE'],
+        ['✔ Discutir com os gestores a necessidade de garantir a sustentabilidade ambiental relacionada ao uso excessivo de recursos energéticos na Análise Ética no AMISPE', '✔ Listar valores que garantam a sustentabilidade ambiental relacionada ao uso excessivo de recursos energéticos na Análise Ética no AMISPE'],
+        ['✔ Listar as evidências de conhecimento sobre princípios de qualidade de dados, metadados, linhagem e modelagem de dados na Análise Ética no AMISPE', '✔ Discutir com os gestores a necessidade de garantir treinamento sobre princípios de qualidade de dados, metadados, linhagem e modelagem de dados na Análise Ética no AMISPE'],
+        ['✔ Listar medidas para garantir que o time da solução está orientado a preservar privacidade, sigilos e segredos de negócios na Análise Ética no AMISPE', '✔ Discutir com os gestores a necessidade de garantir que o time da solução esteja orientado a preservar privacidade, sigilos e segredos de negócios na Análise Ética no AMISPE'],
+        ['✔ Listar medidas para garantir que o time da solução tem condição de identificar questões de propriedade intelectual na Análise Ética no AMISPE', '✔ Discutir com os gestores a necessidade de garantir que o time da solução tem condição de identificar questões de propriedade intelectual na Análise Ética no AMISPE']
+    ];
+
+    /* ── Estado do LEC (chave → valor) ───────────────────── */
+    let LEC = {};
+    const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const v = k => LEC[k] ?? '';
+
+    function sel(key, ops, extra = '') {
+        return `<select class="lec-in" data-lec="${key}" ${extra}>` +
+            ops.map(([val, txt]) => `<option value="${esc(val)}">${esc(txt)}</option>`).join('') + `</select>`;
+    }
+    const inp = (key, ph = '', extra = '') => `<input class="lec-in" data-lec="${key}" placeholder="${esc(ph)}" ${extra}>`;
+    const txa = (key, ph = '', rows = 3) => `<textarea class="lec-in" data-lec="${key}" rows="${rows}" placeholder="${esc(ph)}"></textarea>`;
+    const datalistPraticas = `<datalist id="dl-praticas">${PRATICAS.map(p => `<option value="[${p.cod}] ${esc(p.nome)}">`).join('')}</datalist>`;
+
+    function secao(num, titulo, sub, corpo, id) {
+        return `<section class="ds-section" id="${id}"><div class="ds-section-hd"><div class="ds-section-num">${num}</div>
+            <div><h2>${titulo}</h2><p>${sub}</p></div></div>${corpo}</section>`;
+    }
+    const card = (titulo, corpo, cls = '') => `<div class="ds-card ${cls}" style="margin-bottom:14px;height:auto;"><div class="ds-card-header"><div class="ds-card-title">${titulo}</div></div><div class="ds-card-body">${corpo}</div></div>`;
+
+    function perguntas(pref, lista, ops, extraCol) {
+        return `<table class="lec-tab"><thead><tr><th style="width:34px">#</th><th>Questão</th><th style="width:230px">Resposta</th>${extraCol ? `<th style="width:${extraCol.w}">${extraCol.th}</th>` : ''}</tr></thead><tbody>` +
+            lista.map((q, i) => `<tr><td class="c">${i + 1}</td><td>${esc(q).replace(/\n/g, '<br>')}</td><td>${sel(`${pref}.${i}`, typeof ops === 'function' ? ops(i) : ops)}</td>${extraCol ? `<td>${extraCol.td(i)}</td>` : ''}</tr>`).join('') +
+            `</tbody></table>`;
+    }
+
+    function renderLEC() {
+        const nfpRot = ['NEC 1', 'FUN 1.1', 'FUN 1.2', 'NEC 2', 'FUN 2.1', 'FUN 2.2'];
+        const h = [];
+        h.push(`<div class="lec-intro">${card('O que é o LEC', `<p>${esc(LEC_TXT.metodologia).replace(/\n/g, '<br>')}</p>
+            <p style="margin-top:6px;"><strong>Entregáveis:</strong> Análise Crítica e Plano de Execução — calculados nesta página com as mesmas regras da planilha LEC v2.0, à medida que você responde.</p>`)}</div>`);
+
+        h.push(secao(1, 'Identificação', 'Solução, responsáveis e relação com IA', `<div class="grid g2">
+            <label class="lec-f">Nome da solução digital${inp('id.nome')}</label>
+            <label class="lec-f">Responsável pelo preenchimento${inp('id.resp')}</label>
+            <label class="lec-f">Especialista em Desenvolvimento Confiável${inp('id.esp')}</label>
+            <label class="lec-f">Relação com IA${sel('id.ia', OP_IA)}</label></div>`, 'lec-id'));
+
+        h.push(secao(2, 'Escopo', 'Limites e abrangência da solução', [
+            card('ONP — Objetivos de Negócio e Problema', txa('esc.onp', 'O que se pretende alcançar com a solução e qual problema ela resolve?', 3)),
+            card('NFP — Necessidades e Funcionalidades Preliminares', `<table class="lec-tab"><thead><tr><th style="width:70px">ID</th><th>Nome ou descrição</th><th>Atenção</th><th>Atividade do GDC</th></tr></thead><tbody>` +
+                nfpRot.map((r, i) => `<tr class="${r.startsWith('NEC') ? 'nec' : ''}"><td class="c">${r}</td><td>${inp(`esc.nfp.${i}.nome`)}</td><td>${inp(`esc.nfp.${i}.aten`)}</td><td>${inp(`esc.nfp.${i}.ativ`, '', 'list="dl-praticas"')}</td></tr>`).join('') +
+                `</tbody></table>${datalistPraticas}`),
+            card('DIE — Dimensionamento Inicial Estimado', `<table class="lec-tab"><thead><tr><th>Dimensão</th><th style="width:300px">Valor</th><th style="width:110px">Unidade</th><th style="width:70px">Pontos</th></tr></thead><tbody>
+                <tr><td>Tamanho do software</td><td>${inp('esc.die.tam')}</td><td>PF</td><td></td></tr>
+                ${dieRow('attr')}
+                <tr><td>Volume estimado de registros (na entidade principal)</td><td>${inp('esc.die.reg')}</td><td>registros</td><td></td></tr>
+                <tr><td>Usuários (simultâneos e/ou não simultâneos)</td><td>${inp('esc.die.usr')}</td><td>usuários</td><td></td></tr>
+                ${dieRow('pess')}${dieRow('abr')}${dieRow('freq')}${dieRow('ret')}
+                <tr class="tot"><td colspan="3">Pontuação do dimensionamento</td><td class="c" id="die-total">0</td></tr></tbody></table>`),
+            card('CDC — Conjunto de Dados já Conhecidos', `<table class="lec-tab"><thead><tr><th style="width:34px">#</th><th>Descrição</th><th style="width:22%">Segurança</th><th style="width:26%">Dado pessoal</th></tr></thead><tbody>` +
+                [...Array(7)].map((_, i) => `<tr><td class="c">${i + 1}</td><td>${inp(`esc.cdc.${i}.desc`)}</td><td>${inp(`esc.cdc.${i}.seg`)}</td><td>${inp(`esc.cdc.${i}.dp`)}</td></tr>`).join('') + `</tbody></table>`),
+            card('ESP — Elementos Significativos Previstos de Segurança / Privacidade / Ética', `<table class="lec-tab"><thead><tr><th style="width:34px">#</th><th>Descrição + identificação do elemento concreto</th><th style="width:22%">Utilizar algo pronto</th><th style="width:22%">Implementar</th></tr></thead><tbody>` +
+                [...Array(7)].map((_, i) => `<tr><td class="c">${i + 1}</td><td>${inp(`esc.esp.${i}.desc`, LEC_TXT.esp_ex[i] ? 'Ex.: ' + LEC_TXT.esp_ex[i] : '')}</td><td>${inp(`esc.esp.${i}.pronto`)}</td><td>${inp(`esc.esp.${i}.impl`)}</td></tr>`).join('') + `</tbody></table>`),
+            card('NEE — Não Escopo Explícito', [...Array(3)].map((_, i) => `<div style="margin-bottom:6px;">${inp(`esc.nee.${i}`, `${i + 1}.`)}</div>`).join(''))
+        ].join(''), 'lec-escopo'));
+
+        h.push(secao(3, 'Contexto', 'Ambiente e situações em que o desenvolvimento acontece', [
+            card('ESM — Ecossistema de Software e Macrossistema', txa('esc.esm'.replace('esc', 'ctx'), 'Sistemas com que a solução se integra e se faz parte de algum macrossistema.', 3)),
+            `<div class="grid g2">${card('FND — Finalidade', txa('ctx.fnd', 'Ex.: apoiar a tomada de decisão', 2))}${card('SET — Setor', sel('ctx.set', OP_SETOR) + '<p class="lec-ajuda">A Resolução CNJ nº 615/2025 trata de IA no Poder Judiciário.</p>')}</div>`,
+            card('PTS — Perfil do Time da Solução', `<table class="lec-tab"><thead><tr><th style="width:34px">#</th><th>Provável colaborador</th><th>Papel principal</th><th style="width:64px" title="Segurança">S</th><th style="width:64px" title="Privacidade">P</th><th style="width:64px" title="Ética">E</th></tr></thead><tbody>` +
+                [...Array(10)].map((_, i) => `<tr><td class="c">${i + 1}</td><td>${inp(`ctx.pts.${i}.nome`)}</td><td>${inp(`ctx.pts.${i}.papel`)}</td><td>${sel(`ctx.pts.${i}.s`, OP_SPE)}</td><td>${sel(`ctx.pts.${i}.p`, OP_SPE)}</td><td>${sel(`ctx.pts.${i}.e`, OP_SPE)}</td></tr>`).join('') +
+                `<tr class="tot"><td colspan="3">Nível máximo SPE do time</td><td class="c" id="spe-s">0</td><td class="c" id="spe-p">0</td><td class="c" id="spe-e">0</td></tr></tbody></table>
+                <p class="lec-ajuda">Nível SPE (Segurança, Privacidade, Ética): ${LEC_TXT.spe.map((t, i) => `<strong>${i}</strong> ${esc(t)}`).join(' · ')}</p>`),
+            card('PEE — Relação de Especialistas Previstos', `<table class="lec-tab"><thead><tr><th>Questão</th><th style="width:120px">Resposta</th><th>Justificativa</th></tr></thead><tbody>` +
+                LEC_TXT.pee.map((q, i) => `<tr><td>${esc(q)}</td><td>${sel(`ctx.pee.${i}`, OP_SN)}</td><td class="calc" id="pee-j-${i}"></td></tr>`).join('') + `</tbody></table>`),
+            `<div class="grid g2">${card('Cenário de Recursos', txa('ctx.rec', 'Necessidade de recurso humano externo, específico ou especializado.', 2))}${card('Ambiente e Infraestrutura', txa('ctx.amb', 'Nuvem, on-premise, híbrido...', 2))}</div>`,
+            card('Propósito da Solução — risco excessivo', `<p class="lec-ajuda" style="margin-top:0">Marque se, para alcançar seu propósito, a solução realiza algum destes tratamentos.</p><table class="lec-tab"><thead><tr><th style="width:40px"></th><th>Propósito</th><th style="width:120px">Grau de risco</th></tr></thead><tbody>` +
+                LEC_TXT.proposito.map((t, i) => `<tr><td class="c"><input type="checkbox" data-lec="ctx.prop.${i}"></td><td>${esc(t).replace(/\n/g, '<br>')}</td><td class="calc" id="prop-r-${i}"></td></tr>`).join('') +
+                `<tr class="tot"><td class="c" id="prop-nl"></td><td>Propósito não listado nas opções acima</td><td class="calc" id="prop-r-nl"></td></tr></tbody></table>`)
+        ].join(''), 'lec-contexto'));
+
+        h.push(secao(4, 'Segurança', 'Questões de segurança da informação', card('Questões', perguntas('seg', LEC_TXT.seg, OP_SNP)), 'lec-seg'));
+        h.push(secao(5, 'Privacidade e Proteção de Dados', 'Questões de privacidade (PPD)', card('Questões',
+            perguntas('ppd', LEC_TXT.ppd, i => i === 4 ? OP_SNPA : OP_SNP, { th: 'Pontos', w: '70px', td: i => `<span class="calc c" id="ppd-p-${i}"></span>` }) +
+            `<p style="margin-top:8px;font-weight:700;">Pontuação de privacidade: <span id="ppd-total">0</span> <span class="lec-ajuda">(acima de 15, com o SERPRO como controlador, indica RIPD)</span></p>`), 'lec-ppd'));
+        h.push(secao(6, 'Ética', esc(LEC_TXT.etica_intro || 'Valores éticos associados à solução'), card('Questões',
+            perguntas('eti', LEC_TXT.etica, OP_SNP, { th: 'Justificativa', w: '34%', td: i => `<textarea class="lec-in" data-lec="eti.j.${i}" rows="2"></textarea>` })), 'lec-etica'));
+
+        h.push(secao(7, 'Análise Crítica', 'Pontos de atenção e ações padrão — calculados a partir das respostas', [
+            card('Pontos de atenção para análise', `<table class="lec-tab"><thead><tr><th style="width:30px"></th><th>Ponto de atenção (ação padrão prevista)</th><th style="width:120px">Indicado</th><th>Outros pontos de atenção</th><th>Ação específica recomendada</th></tr></thead><tbody id="ac-body"></tbody></table>`),
+            card('Análise crítica emitida pelo responsável, com revisão do especialista em desenvolvimento confiável', txa('ac.texto', 'Resultado da reflexão sobre escopo e contexto no que se refere a segurança, privacidade e ética.', 6))
+        ].join(''), 'lec-ac'));
+
+        h.push(secao(8, 'Plano de Execução', 'Alfaiataria de processo: o que executar no GDC — calculado a partir das respostas', card('Práticas do GDC',
+            `<table class="lec-tab"><thead><tr><th style="width:42%">Prática / atividade / tarefa</th><th style="width:120px">Indicação</th><th>Detalhes</th></tr></thead><tbody id="plano-body"></tbody></table>`), 'lec-plano'));
+
+        document.getElementById('step-lec').innerHTML = `<div class="lec-idx">${[['lec-id', 'Identificação'], ['lec-escopo', 'Escopo'], ['lec-contexto', 'Contexto'], ['lec-seg', 'Segurança'], ['lec-ppd', 'Privacidade'], ['lec-etica', 'Ética'], ['lec-ac', 'Análise Crítica'], ['lec-plano', 'Plano de Execução']].map(([id, t], i) => `<a href="#lec/${id}">${i + 1}. ${t}</a>`).join('')}</div>` + h.join('');
+        aplicarLEC();
+    }
+    function dieRow(k) {
+        const d = DIE_SEL[k];
+        return `<tr><td>${d.rot}</td><td>${sel('esc.die.' + k, [['', '—']].concat(d.op.map((o, i) => [String(i), o])))}</td><td>${d.un}</td><td class="c calc" id="die-p-${k}"></td></tr>`;
+    }
+
+    /* ── Leitura/escrita do formulário ───────────────────── */
+    function aplicarLEC() {
+        document.querySelectorAll('#step-lec [data-lec]').forEach(el => {
+            const val = LEC[el.dataset.lec];
+            if (el.type === 'checkbox') el.checked = !!val;
+            else el.value = val ?? '';
+        });
+        calcularLEC();
+    }
+    document.addEventListener('input', e => {
+        const el = e.target.closest('[data-lec]');
+        if (!el) return;
+        LEC[el.dataset.lec] = el.type === 'checkbox' ? el.checked : el.value;
+        if (LEC[el.dataset.lec] === '' || LEC[el.dataset.lec] === false) delete LEC[el.dataset.lec];
+        calcularLEC();
+        scheduleAutosave();
+    });
+    document.addEventListener('change', e => {
+        if (e.target.closest('[data-lec]')) e.target.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+
+    /* ── Regras da planilha LEC v2.0 ─────────────────────── */
+    const S = i => v('seg.' + i), P = i => v('ppd.' + i), E = i => v('eti.' + i);
+    const algumS = (a, b, val = 'sim') => { for (let i = a; i <= b; i++) if (S(i) === val) return true; return false; };
+
+    function avaliarLEC() {
+        const r = {};
+        r.ppdPts = PPD_PTS.map((p, i) => P(i) === 'sim' ? p : 0);
+        r.ppdTotal = r.ppdPts.reduce((a, b) => a + b, 0);
+        r.die = {};
+        for (const k in DIE_SEL) { const ix = v('esc.die.' + k); r.die[k] = ix === '' ? 0 : DIE_SEL[k].pts[+ix]; }
+        r.dieTotal = Object.values(r.die).reduce((a, b) => a + b, 0);
+        r.excessivo = [...Array(7)].some((_, i) => !!LEC['ctx.prop.' + i]);
+        const ia = v('id.ia') === 'acessoria' || v('id.ia') === 'solucao';
+        r.ac = [
+            { t: 'Elaboração de RAT', ind: P(1) === 'sim' && P(0) === 'sim',
+              outro: (S(5) === 'sim' || S(6) === 'sim') ? 'Os times de Segurança e de Desenvolvimento devem garantir controles adequados ao contexto da solução' : '',
+              acao: (S(5) === 'sim' || S(6) === 'sim') ? 'Implementar controles que assegurem a segurança adequada' : '' },
+            { t: 'Elaboração de RIPD', ind: P(1) === 'sim' && r.ppdTotal > 15,
+              outro: S(0) === 'sim' ? 'Devido as características da solução deverá solicitar apoio ao time da SUPSI' : '',
+              acao: S(0) === 'sim' ? 'Time da SUPSI deve analisar a solução e definir os controles adequados a seu contexto' : '' },
+            { t: 'Solução apresenta Risco Excessivo', ind: r.excessivo,
+              outro: (ia && v('ctx.set') === 'judiciario') ? 'Observar a Resolução CNJ nº 615 de 11/03/2025 (https://atos.cnj.jus.br/atos/detalhar/6001)' : '', acao: '' },
+            { t: 'Execução de Avaliação de Impacto Ético', ind: ia, outro: '', acao: '' },
+            { t: 'Realização de GRSI', ind: algumS(0, 4) || algumS(6, 10) || S(5) === 'nao' || S(6) === 'nao', outro: '', acao: '' },
+            { t: 'Execução de Pentest (Avaliar)', ind: S(3) === 'sim' || S(4) === 'sim', outro: '', acao: '' }
+        ];
+        const dp = P(0) === 'sim', ppdIA = P(6) === 'sim', algumaSeg = algumS(0, 10);
+        const grsi = r.ac[4].ind;
+        const det03 = [];
+        if (P(0) === 'nao') det03.push('✔ Devido a solução não tratar dados pessoais executar AMISPE Expressa verificando requisitos de segurança e ética');
+        if (r.ac[1].ind) det03.push('✔ Devido a necessidade da elaboração do RIPD o AMISPE Completo deve contar com a presença do Especialista em PPD');
+        if (dp && r.ac[3].ind) det03.push('✔ Devido as características da solução o AMISPE Completo deve indicar a Avaliação de Impacto Algorítmico');
+        if (ppdIA) det03.push('✔ Devido a solução ter IA o AMISPE deve indicar a necessidade de Avaliação de Risco Preliminar');
+        ETICA_PLANO.forEach((t, i) => { if (E(i) === 'sim') det03.push(t[0]); else if (E(i) === 'nao') det03.push(t[1]); });
+        LEC_TXT.pee.forEach((t, i) => { if (v('ctx.pee.' + i) === 'sim') det03.push('✔ ' + t); });
+        const sast = algumS(0, 4) || ppdIA || algumS(7, 10) || algumS(2, 4, 'nao') || S(1) === 'npr';
+        const exc = LEC_TXT.excecao_sast.join('\n');
+        r.plano = {
+            amispe: { ind: true, det: det03.join('\n') },
+            req01: { ind: dp || algumaSeg }, req02: { ind: dp || algumaSeg }, req03: { ind: null },
+            req04: { ind: dp }, req05: { ind: dp }, req06: { ind: dp },
+            des01: { ind: dp || algumaSeg }, des02: { ind: S(3) === 'sim' || S(4) === 'sim' || S(8) === 'sim' || S(10) === 'sim' },
+            des03: { ind: dp || S(4) === 'sim' }, des04: { ind: grsi },
+            imp01: { ind: dp || ppdIA || algumaSeg }, imp02: { ind: dp || ppdIA || algumaSeg },
+            ver01: { ind: algumS(0, 1) || algumS(3, 7) || ppdIA || algumS(9, 10) }, ver02: { ind: dp },
+            ver03: { ind: sast }, ver04: { ind: sast }, ent01: { ind: dp }, sus01: { ind: null }, sus02: { ind: null }
+        };
+        if (r.plano.imp01.ind) { r.plano.imp01.det = 'Se aplicável (Ex. Lowcode, Painel Qlik)'; r.plano.imp02.det = r.plano.imp01.det; }
+        if (sast) { r.plano.ver03.det = exc; r.plano.ver04.det = exc; }
+        r.respondido = [...Array(11)].some((_, i) => S(i)) || [...Array(8)].some((_, i) => P(i));
+        return r;
+    }
+
+    const indTag = ind => ind === null ? '<span class="ds-tag" style="background:#eee;color:#636262">Sem regra</span>'
+        : ind ? '<span class="ds-tag ds-tag-success">✅ Indicado</span>' : '<span class="ds-tag" style="background:#f1f1f1;color:#636262">🔲 Não indicado</span>';
+
+    function calcularLEC() {
+        const r = avaliarLEC();
+        const set = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+        for (const k in DIE_SEL) set('die-p-' + k, v('esc.die.' + k) === '' ? '' : String(r.die[k]).replace('.', ','));
+        set('die-total', String(r.dieTotal).replace('.', ','));
+        r.ppdPts.forEach((p, i) => set('ppd-p-' + i, P(i) === 'sim' && p ? '+' + p : ''));
+        set('ppd-total', r.ppdTotal);
+        ['s', 'p', 'e'].forEach(c => set('spe-' + c, Math.max(0, ...[...Array(10)].map((_, i) => +(v(`ctx.pts.${i}.${c}`) || 0)))));
+        LEC_TXT.pee.forEach((_, i) => set('pee-j-' + i, v('ctx.pee.' + i) === 'sim' ? 'Natureza do negócio e dados sugerem participação de um especialista' : v('ctx.pee.' + i) === 'nao' ? PEE_NAO[i] : ''));
+        LEC_TXT.proposito.forEach((_, i) => set('prop-r-' + i, LEC['ctx.prop.' + i] ? '<span class="ds-tag ds-tag-danger">Excessivo</span>' : ''));
+        set('prop-nl', r.excessivo ? '🔲' : '✅');
+        set('prop-r-nl', r.excessivo ? '' : '<span class="ds-tag ds-tag-success">Não excessivo</span>');
+        set('ac-body', r.ac.map((a, i) => `<tr><td class="c">${'ABCDEF'[i]}</td><td>${a.t}</td><td>${indTag(a.ind)}</td><td class="calc">${esc(a.outro)}</td><td class="calc">${esc(a.acao)}</td></tr>`).join(''));
+        set('plano-body', PRATICAS.filter(p => r.plano[p.id]).map(p => {
+            const x = r.plano[p.id];
+            return `<tr><td><a href="#${p.id}">[${p.cod}] ${esc(p.nome)}</a></td><td>${indTag(x.ind)}</td><td class="calc">${esc(x.det || '').replace(/\n/g, '<br>')}</td></tr>`;
+        }).join(''));
+        renderTrilha(r);
+    }
+
+    /* ── Trilha (navegação), visão geral e páginas das práticas ── */
+    let PASSO = 'trilha';
+    let NOTAS = {};
+    function statusPratica(id, r) {
+        if (id === 'lec') return r.respondido ? { cls: 'ok', txt: 'Em preenchimento' } : { cls: '', txt: 'Comece por aqui' };
+        if (!r.respondido) return { cls: '', txt: 'Responda o LEC' };
+        const ind = r.plano[id] ? r.plano[id].ind : null;
+        return ind === null ? { cls: 'nr', txt: 'Sem regra no LEC' } : ind ? { cls: 'ind', txt: 'Indicado pelo LEC' } : { cls: 'nao', txt: 'Não indicado' };
+    }
+    function renderTrilha(r = avaliarLEC()) {
+        const nav = document.getElementById('gdcTrail');
+        nav.innerHTML = `<a class="trail-chip home ${PASSO === 'trilha' ? 'active' : ''}" href="#trilha">Visão geral</a>` + FASES.map(f =>
+            `<div class="trail-phase"><span class="trail-phase-lbl">${f.nome}</span>${PRATICAS.filter(p => p.fase === f.id).map(p => {
+                const st = statusPratica(p.id, r);
+                return `<a class="trail-chip ${st.cls} ${PASSO === p.id ? 'active' : ''}" href="#${p.id}" title="${esc(p.nome)} — ${st.txt}"><span class="dot"></span>${p.curto || p.cod}</a>`;
+            }).join('')}</div>`).join('');
+        const ov = document.getElementById('trilha-tab');
+        if (ov) ov.innerHTML = FASES.map(f => `<tr class="fase"><td colspan="4">${f.nome}</td></tr>` + PRATICAS.filter(p => p.fase === f.id).map(p => {
+            const st = statusPratica(p.id, r);
+            return `<tr><td class="c"><strong>${p.cod}</strong></td><td><a href="#${p.id}">${esc(p.curto ? p.curto + ' — ' + p.nome : p.nome)}</a><div class="lec-ajuda" style="margin:2px 0 0">${esc(p.desc)}</div></td>
+                <td><span class="st st-${st.cls || 'base'}">${st.txt}</span></td><td>${p.id === 'lec' || p.id === 'amispe' ? '<span class="ds-tag ds-tag-primary">Disponível</span>' : '<span class="ds-tag" style="background:#eee;color:#636262">Em construção</span>'}</td></tr>`;
+        }).join('')).join('');
+        if (PRAT[PASSO] && PASSO !== 'lec' && PASSO !== 'amispe') renderPratica(PASSO, r);
+    }
+    function renderTrilhaPagina() {
+        document.getElementById('step-trilha').innerHTML = `
+            <div class="grid g3" style="margin-bottom:14px;">
+                ${card('O que é o GDC', 'O Guia de Desenvolvimento Confiável organiza as práticas de segurança, privacidade e ética ao longo do ciclo de vida de uma solução digital — do planejamento à sustentação.')}
+                ${card('Como usar esta página', '<ol><li>Responda o <a href="#lec">LEC</a>: ele calcula a Análise Crítica e o Plano de Execução.</li><li>Realize o <a href="#amispe">AMISPE</a> com o time e os especialistas.</li><li>Siga as práticas que o LEC indicar.</li></ol>')}
+                ${card('Salvar e compartilhar', 'O botão <strong>💾 Salvar</strong> gera um único arquivo com o LEC, o AMISPE e as notas das práticas. Use <strong>📂 Carregar</strong> para retomar. Arquivos do AMISPE salvos na versão anterior continuam carregando.')}
+            </div>
+            ${card('Trilha de práticas do GDC 3.0', '<table class="lec-tab trilha"><thead><tr><th style="width:70px">Código</th><th>Prática</th><th style="width:170px">Situação</th><th style="width:130px">Nesta página</th></tr></thead><tbody id="trilha-tab"></tbody></table>')}`;
+    }
+    function renderPratica(id, r = avaliarLEC()) {
+        const p = PRAT[id], st = statusPratica(id, r), x = r.plano[id] || {};
+        document.getElementById('step-pratica').innerHTML = `
+            <div class="grid g2" style="margin-bottom:14px;">
+                ${card('O que é', `<p>${esc(p.desc)}</p><p style="margin-top:8px;"><a href="${GDC_GUIA}" target="_blank">Ver no Guia de Desenvolvimento Confiável ↗</a></p>`)}
+                ${card('Indicação pelo LEC', `<p><span class="st st-${st.cls || 'base'}">${st.txt}</span></p>${x.det ? `<p class="lec-ajuda" style="margin-top:8px;">${esc(x.det).replace(/\n/g, '<br>')}</p>` : ''}<p class="lec-ajuda" style="margin-top:8px;">Calculado pelas regras do Plano de Execução da planilha LEC v2.0. <a href="#lec/lec-plano">Ver plano completo</a></p>`)}
+            </div>
+            ${card('Notas da equipe', `<textarea class="lec-in" id="nota-pratica" rows="6" placeholder="Registre decisões, evidências, links e responsáveis desta prática."></textarea>`)}
+            <div class="nota-construcao">🚧 O conteúdo completo desta prática (roteiro, formulários e exemplos) ainda vai ser construído nesta página.</div>`;
+        const ta = document.getElementById('nota-pratica');
+        ta.value = NOTAS[id] || '';
+        ta.addEventListener('input', () => { NOTAS[id] = ta.value; if (!ta.value) delete NOTAS[id]; scheduleAutosave(); });
+    }
+
+    function irPara(hash) {
+        let [passo, ancora] = (hash || '').replace(/^#/, '').split('/');
+        if (!passo || (!PRAT[passo] && passo !== 'trilha')) passo = 'trilha';
+        PASSO = passo;
+        document.body.dataset.step = passo;
+        document.querySelectorAll('.gdc-step').forEach(s => s.classList.remove('on'));
+        const alvo = passo === 'trilha' || passo === 'lec' || passo === 'amispe' ? passo : 'pratica';
+        document.getElementById('step-' + alvo).classList.add('on');
+        const p = PRAT[passo];
+        document.getElementById('heroKicker').textContent = p ? `${FASES.find(f => f.id === p.fase).nome} · ${p.cod}` : 'SERPRO · Desenvolvimento Confiável';
+        document.getElementById('heroTitle').textContent = p ? (p.curto || p.cod) : 'Guia de Desenvolvimento Confiável';
+        document.getElementById('heroSub').textContent = p ? p.nome + (passo === 'amispe' ? ' — Facilitação de evento' : '') : 'Trilha de práticas de segurança, privacidade e ética';
+        document.title = p ? `${p.curto || p.cod} — ${p.nome}` : 'GDC — Guia de Desenvolvimento Confiável';
+        if (document.body.classList.contains('editing') && passo !== 'amispe') toggleEdit();
+        renderTrilha();
+        if (ancora) { const el = document.getElementById(ancora); if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 30); }
+        else window.scrollTo(0, 0);
+        const ativo = document.querySelector('.trail-chip.active');
+        if (ativo) ativo.scrollIntoView({ block: 'nearest', inline: 'center' });
+    }
+    window.addEventListener('hashchange', () => irPara(location.hash));
+
+    renderTrilhaPagina();
+    renderLEC();
+
     /* ================================================================
        AUTOSAVE (localStorage)
        Salva rascunho automaticamente e restaura ao reabrir a página.
     ================================================================ */
-    const AUTOSAVE_KEY = 'amisp_autosave_v1';
+    const AUTOSAVE_KEY = 'gdc_autosave_v2';
+    const AUTOSAVE_ANTIGO = 'amisp_autosave_v1';
     let autosaveTimer = null;
     function scheduleAutosave() {
         clearTimeout(autosaveTimer);
         autosaveTimer = setTimeout(() => {
             try {
-                localStorage.setItem(AUTOSAVE_KEY, JSON.stringify({
-                    _versao: '1.1',
-                    _salvo: new Date().toISOString(),
-                    modo: modoAtual,
-                    campos: collectFields(),
-                    acoes: collectActions(),
-                    likert: collectLikert()
-                }));
+                localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(Object.assign(coletarTudo(), { _salvo: new Date().toISOString() })));
             } catch (err) { /* localStorage cheio ou indisponível */ }
         }, 800);
     }
@@ -1567,33 +1968,14 @@
 
     function restoreAutosave() {
         let data = null;
-        try { data = JSON.parse(localStorage.getItem(AUTOSAVE_KEY)); } catch (err) { return; }
+        try { data = JSON.parse(localStorage.getItem(AUTOSAVE_KEY)) || JSON.parse(localStorage.getItem(AUTOSAVE_ANTIGO)); } catch (err) { return; }
         if (!data) return;
-        if (data.modo) setModo(data.modo, { silencioso: true });
-        if (data.campos) {
-            Object.entries(data.campos).forEach(([key, val]) => {
-                const el = document.querySelector(`[data-field="${key}"]`);
-                if (el) el.innerHTML = semComentarios(val);
-            });
-        }
-        if (data.acoes && Array.isArray(data.acoes) && data.acoes.length) {
-            const tbody = document.getElementById('actionBody');
-            tbody.innerHTML = '';
-            data.acoes.forEach(row => tbody.appendChild(makeActionRow(semComentarios(row.risco) || ' ', semComentarios(row.acao) || ' ', semComentarios(row.responsavel) || ' ')));
-        }
-        if (data.likert) {
-            document.querySelectorAll('#likert1 .l-btn').forEach(btn =>
-                btn.classList.toggle('sel', btn.textContent.trim() === String(data.likert)));
-        }
-        atualizarIniciais();
-        const quando = data._salvo ? new Date(data._salvo).toLocaleString('pt-BR') : '';
+        aplicarPacote(data);
+        const quando = (data._salvo || data._exportado) ? new Date(data._salvo || data._exportado).toLocaleString('pt-BR') : '';
         showToast(`📝 Rascunho restaurado${quando ? ' (' + quando + ')' : ''}`, 'success');
     }
-    /* Modo inicial: último escolhido neste navegador (padrão AMISPE) */
-    let modoSalvo = null;
-    try { modoSalvo = localStorage.getItem(MODO_KEY); } catch (err) {}
-    setModo(MODOS[modoSalvo] ? modoSalvo : 'amispe', { silencioso: true });
     restoreAutosave();
+    irPara(location.hash);
 
     /* ================================================================
        LIGHTBOX DE IMAGENS
